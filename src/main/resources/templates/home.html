@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <!-- this is where we refer the css file from src/main/resources/static/main.css -->
+  <link th:href="@{/main.css}" rel="stylesheet" />
+  <title>EventMaster | Home</title>
+</head>
+<body>
+  <div class="w-full min-h-screen border-4 border-sky-500 flex items-center flex-col">
+    <div class="w-5/6 h-20 flex items-center justify-center border-2 border-black sm:w-full">Header</div>
+    <div class="w-5/6 h-auto flex items-center justify-center border-2 border-red-950 flex-1 sm:w-full">Main</div>
+    <div class="w-5/6 h-20 flex items-center justify-center border-2 border-green-950 sm:w-full">Footer</div>
+  </div>
+</body>
+</html>
