@@ -1,9 +1,6 @@
 package com.therealazimbek.spring.eventmasterapp.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
@@ -14,6 +11,9 @@ import org.hibernate.validator.constraints.CreditCardNumber;
 public class UserPaymentCard {
 
     @Id
+    @GeneratedValue
+    private long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -54,5 +54,5 @@ public class Vendor {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private VendorCategory category;
 }

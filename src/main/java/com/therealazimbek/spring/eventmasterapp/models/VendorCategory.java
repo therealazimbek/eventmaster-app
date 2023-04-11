@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 @Entity
-public class Category {
+public class VendorCategory {
 
     @Id
     @GeneratedValue
@@ -24,7 +24,4 @@ public class Category {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
     private List<Vendor> vendors = new ArrayList<>();
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.PERSIST)
-    private List<Task> tasks = new ArrayList<>();
 }

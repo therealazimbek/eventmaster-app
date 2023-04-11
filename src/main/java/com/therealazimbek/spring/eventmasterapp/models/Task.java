@@ -29,7 +29,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private TaskCategory category;
 
     @ManyToOne
     @JoinColumn(name = "event_id")
