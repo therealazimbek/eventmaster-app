@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="styles/styles.css" />
+        <link rel="icon" href="./images/favicon.ico" />
+        <title>New task</title>
+        <script
+            src="https://kit.fontawesome.com/3ee52d1216.js"
+            crossorigin="anonymous"
+        ></script>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <div class="logo"><a href="index.html">EventMaster</a></div>
+                <nav class="nav">
+                    <a href="home.html">Home</a>
+                    <a class="" href="events.html">Events</a>
+                    <a href="features.html">Features</a>
+                    <a href="about.html">About us</a>
+                </nav>
+                <div class="login-area">
+                    <a href="login.html" class="btn btn-green">Login</a>
+                    <a href="register.html" class="btn">Register</a>
+                </div>
+            </header>
+            <main class="event-main no-bg">
+                <section class="event-section">
+                    <h2 class="bg-h">Create a new task</h2>
+                    <div class="event-create-form">
+                        <form action="" class="form">
+                            <div class="input-area">
+                                <input
+                                    type="text"
+                                    name="title"
+                                    id="title"
+                                    placeholder="Title"
+                                />
+                            </div>
+
+                            <div class="input-area">
+                                <input
+                                    type="text"
+                                    name="due"
+                                    id="due"
+                                    placeholder="Due datetime: DD/MM/YYYY, HH:MM"
+                                    onfocus="(this.type='datetime-local')"
+                                />
+                            </div>
+                            <div class="input-area">
+                                <select name="category" id="category">
+                                    <option value="" disabled selected>
+                                        Select category
+                                    </option>
+                                    <option value="photoAndVideo">
+                                        Photo & Video studio
+                                    </option>
+                                    <option value="attireAndAccessories">
+                                        Attire & Accessories
+                                    </option>
+                                    <option value="healthAndBeauty">
+                                        Health & Beauty
+                                    </option>
+                                    <option value="musicAndShow">
+                                        Music & Show
+                                    </option>
+                                    <option value="flowersAndDecor">
+                                        Flowers & Decor
+                                    </option>
+                                    <option value="accessories">
+                                        Accessories
+                                    </option>
+                                    <option value="reception">Reception</option>
+                                    <option value="transportation">
+                                        Transportation
+                                    </option>
+                                    <option value="accommodation">
+                                        Accommodation
+                                    </option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="input-area">
+                                <select name="status" id="status">
+                                    <option value="" disabled selected>
+                                        Select status
+                                    </option>
+
+                                    <option value="notstartted">
+                                        Not Started
+                                    </option>
+                                    <option value="started">Started</option>
+                                    <option value="done">Done</option>
+                                </select>
+                            </div>
+                            <div class="input-area">
+                                <select name="event" id="event_id">
+                                    <option value="" disabled selected>
+                                        Select event
+                                    </option>
+
+                                    <option value="1">User event #1</option>
+                                    <option value="1">User event #2</option>
+                                    <option value="1">User event #3</option>
+                                </select>
+                            </div>
+                            <div class="input-area">
+                                <select name="user" id="user_id">
+                                    <option value="" disabled selected>
+                                        Select a user to assign
+                                    </option>
+                                    <option value="1">User #1</option>
+                                    <option value="2">User #2</option>
+                                    <option value="3">User #3</option>
+                                </select>
+                            </div>
+                            <div class="input-area">
+                                <textarea
+                                    type="text"
+                                    name="description"
+                                    id="description"
+                                    placeholder="Description"
+                                ></textarea>
+                            </div>
+
+                            <div class="input-area">
+                                <input
+                                    type="submit"
+                                    name="submit"
+                                    id="submit"
+                                    value="Create"
+                                    class="btn btn-green"
+                                />
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </main>
+            <footer>
+                <p class="footer-text">
+                    &copy; 2023 EventMaster. All rights are reserved. With Love,
+                    Azimbek
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

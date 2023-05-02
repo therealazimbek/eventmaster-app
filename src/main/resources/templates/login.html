@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="icon" th:href="@{/images/favicon.ico}" />
+        <title>Login</title>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
+                <nav class="nav">
+                    <a th:href="@{/home}">Home</a>
+                    <a th:href="@{/events}">Events</a>
+                    <a th:href="@{/features}">Features</a>
+                    <a th:href="@{/about}">About us</a>
+                </nav>
+                <div class="login-area">
+                    <a th:href="@{/login}" class="btn btn-green">Login</a>
+                    <a th:href="@{/register}" class="btn">Register</a>
+                </div>
+            </header>
+            <main>
+                <div class="form-area">
+                    <h2>Login</h2>
+                    <form method="POST" th:action="@{/login}" class="form">
+                        <div class="input-area">
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Email"
+                            />
+                        </div>
+                        <div class="input-area">
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                placeholder="Password"
+                            />
+                        </div>
+                        <div class="input-area">
+                            <input
+                                type="submit"
+                                name="submit"
+                                id="submit"
+                                value="Log in"
+                                class="btn btn-green"
+                            />
+                        </div>
+                    </form>
+                    <p>
+                        New here?
+                        <a href="register.html" class="link-green">Register</a>
+                    </p>
+                </div>
+            </main>
+            <footer>
+                <p class="footer-text">
+                    &copy; 2023 EventMaster. All rights are reserved. With Love,
+                    Azimbek
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -1,17 +1,153 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <!-- this is where we refer the css file from src/main/resources/static/main.css -->
-  <link th:href="@{/main.css}" rel="stylesheet" />
-  <title>EventMaster | Home</title>
-</head>
-<body>
-  <div class="w-full min-h-screen border-4 border-sky-500 flex items-center flex-col">
-    <div class="w-5/6 h-20 flex items-center justify-center border-2 border-black sm:w-full">Header</div>
-    <div class="w-5/6 h-auto flex items-center justify-center border-2 border-red-950 flex-1 sm:w-full">Main</div>
-    <div class="w-5/6 h-20 flex items-center justify-center border-2 border-green-950 sm:w-full">Footer</div>
-  </div>
-</body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" th:href="@{../static/css/styles.css}" />
+        <link rel="icon" th:href="@{../static/images/favicon.ico}" />
+        <title>Home</title>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <div class="logo"><a href="index.html">EventMaster</a></div>
+                <nav class="nav">
+                    <a class="active" href="#">Home</a>
+                    <a href="events.html">Events</a>
+                    <a href="features.html">Features</a>
+                    <a href="about.html">About us</a>
+                </nav>
+                <div class="login-area">
+                    <a href="login.html" class="btn btn-green">Login</a>
+                    <a href="register.html" class="btn">Register</a>
+                </div>
+            </header>
+            <main class="no-bg user-home">
+                <h1>Welcome back, Azimbek</h1>
+                <div class="cards">
+                    <div class="card">
+                        <h3>
+                            Upcoming events
+                            <a href="events.html" class="btn btn-green">More</a>
+                        </h3>
+
+                        <div class="links">
+                            <div class="link">
+                                <p>14.05.2023</p>
+                                <a href="event.html"
+                                    >How to start an IT career?</a
+                                >
+                            </div>
+                            <div class="link">
+                                <p>19.05.2023</p>
+                                <a href="event.html"
+                                    >How to start an IT career?</a
+                                >
+                            </div>
+                            <div class="link">
+                                <p>19.05.2023</p>
+                                <a href="event.html"
+                                    >How to start an IT career?</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>
+                            My events
+                            <a href="events.html" class="btn btn-green">More</a>
+                        </h3>
+                        <div class="links">
+                            <div class="link">
+                                <p>20.05.2023</p>
+                                <a href="event.html">Bachelor party</a>
+                            </div>
+                            <div class="link">
+                                <p>01.05.2023</p>
+                                <a href="event.html">Developers' day!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>
+                            Explore events
+                            <a href="events.html" class="btn btn-green">More</a>
+                        </h3>
+                        <div class="links">
+                            <div class="link">
+                                <p>25.05.2023</p>
+                                <a href="event.html">Boys party</a>
+                            </div>
+                            <div class="link">
+                                <p>01.06.2023</p>
+                                <a href="event.html">Town day!</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>
+                            Assigned tasks
+                            <a href="tasks.html" class="btn btn-green">More</a>
+                        </h3>
+                        <div class="links">
+                            <div class="link">
+                                <p>10.05.2023</p>
+                                <a href="task.html">Deal with new vendors</a>
+                            </div>
+                            <div class="link">
+                                <p>03.05.2023</p>
+                                <a href="task.html">Discuss new event</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>
+                            Order history
+                            <a href="orders.html" class="btn btn-green">More</a>
+                        </h3>
+                        <div class="links">
+                            <div class="link">
+                                <p>10.04.2023</p>
+                                Overcome fear
+                  
+                            </div>
+                            <div class="link">
+                                <p>03.04.2023</p>
+                                Java Dev Future
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>
+                            Venues & Vendors
+                            <a href="venue_vendors.html" class="btn btn-green">More</a>
+                        </h3>
+                        <div class="links">
+                            <div class="link">
+                                <p>
+                                    Venue</p>
+                                    <a href="venue.html">Almaty Hotel</a>
+                                </p>
+
+                                <p>30000 T per person</p>
+                            </div>
+                            <div class="link">
+                                <p>Vendor</p>
+                                <a href="vendor.html">Smile Photo Studio</a>
+                                <p>100000 T</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <p class="footer-text">
+                    &copy; 2023 EventMaster. All rights are reserved. With Love,
+                    Azimbek
+                </p>
+            </footer>
+        </div>
+    </body>
 </html>
