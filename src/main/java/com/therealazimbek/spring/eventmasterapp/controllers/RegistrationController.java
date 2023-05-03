@@ -18,6 +18,11 @@ public class RegistrationController {
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
 
+    @ModelAttribute
+    public RegistrationForm registrationForm() {
+        return new RegistrationForm();
+    }
+
     public RegistrationController(
             UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
@@ -29,13 +34,13 @@ public class RegistrationController {
     }
 
     @PostMapping
-    public String processRegistration(@Valid User user, Errors errors
+    public String processRegistration(@Valid RegistrationForm registrationForm, Errors errors
                                         , BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "/register";
         }
 
-        userRepo.save(user);
+        userRepo.save(registrationForm.toUser(passwordEncoder));
         return "redirect:/login";
     }
 }

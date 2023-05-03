@@ -2,10 +2,10 @@ package com.therealazimbek.spring.eventmasterapp.configs;
 
 import com.therealazimbek.spring.eventmasterapp.models.User;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
-import com.therealazimbek.spring.eventmasterapp.services.UserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,6 +38,14 @@ public class SecurityConfig {
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .failureUrl("/login?error")
+                .permitAll()
+                .and()
+                .logout()
+                .clearAuthentication(true)
+                .invalidateHttpSession(true)
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
                 .and()
                 .build();
     }

@@ -170,6 +170,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
 }
 
 input:not([type="submit"]),
@@ -508,4 +509,23 @@ textarea {
 
 .grid-events > ul {
     width: 100%;
+}
+
+.validationError {
+    padding: 5px;
+    font-size: 14px;
+    color: red;
+}
+
+.alert-success {
+    padding: 5px;
+    font-size: 14px;
+    color: #5cc297;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
 }
