@@ -2,6 +2,7 @@ package com.therealazimbek.spring.eventmasterapp.controllers;
 
 import com.therealazimbek.spring.eventmasterapp.models.User;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
+import com.therealazimbek.spring.eventmasterapp.services.UserService;
 import com.therealazimbek.spring.eventmasterapp.utils.RegistrationForm;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequestMapping("/register")
 public class RegistrationController {
 
-    private final UserRepository userRepo;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     @ModelAttribute
@@ -24,8 +25,8 @@ public class RegistrationController {
     }
 
     public RegistrationController(
-            UserRepository userRepo, PasswordEncoder passwordEncoder) {
-        this.userRepo = userRepo;
+            UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
     @GetMapping
@@ -40,7 +41,7 @@ public class RegistrationController {
             return "/register";
         }
 
-        userRepo.save(registrationForm.toUser(passwordEncoder));
+        userService.save(registrationForm.toUser(passwordEncoder));
         return "redirect:/login";
     }
 }

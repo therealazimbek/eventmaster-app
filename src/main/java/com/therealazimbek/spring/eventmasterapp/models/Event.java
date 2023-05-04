@@ -19,35 +19,37 @@ public class Event {
     private UUID id;
 
     @NotBlank(message="Name is required")
-    @Size(min=20, message="Name must be at least 20 characters long")
+    @Size(min=10, message="Name must be at least 10 characters long")
     private String name;
 
-    @DecimalMax(value = "100")
+    @DecimalMax(value = "100000")
     @Digits(fraction = 0, message = "Enter only numbers", integer = 5)
     private BigDecimal price;
 
-    @NotBlank(message = "Budget is required")
-    @DecimalMax(value = "10000")
+    @NotNull(message = "Budget is required")
+    @DecimalMax(value = "100000000")
     @Digits(fraction = 0, message = "Enter only numbers", integer = 8)
     private BigDecimal budget;
 
-    @NotBlank(message = "Enter maximum number of guests")
+    @NotNull(message = "Enter maximum number of guests")
     @Min(value = 10, message = "Minimum 10 guests are allowed")
     @Digits(fraction = 0, message = "Enter only numbers", integer = 3)
     private BigDecimal maxGuests;
 
-    @NotBlank(message = "Is the event private?")
-    private boolean isPrivate;
+    @NotNull(message = "Is the event private?")
+    private Boolean isPrivate;
 
     @NotBlank(message="Main topic is required")
     @Size(min=5, message="Topic must be at least 5 characters long")
     private String topic;
 
-    @NotBlank(message = "Specify start date time")
+    @NotNull(message = "Specify start date time")
     private LocalDateTime startDate;
 
-    @NotBlank(message = "Specify end date time")
+    @NotNull(message = "Specify end date time")
     private LocalDateTime endDate;
+
+    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
