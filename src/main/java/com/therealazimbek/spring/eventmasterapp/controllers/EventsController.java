@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -75,11 +76,11 @@ public class EventsController {
 
     @GetMapping("/{id}")
     public String event(@PathVariable String id, Model model) {
-        Event event = eventService.findById(UUID.fromString(id));
-        if (event != null) {
+        try {
+            Event event = eventService.findById(UUID.fromString(id));
             model.addAttribute("event", event);
             return "event";
-        } else {
+        } catch (ResponseStatusException e) {
             return "notfound";
         }
     }
