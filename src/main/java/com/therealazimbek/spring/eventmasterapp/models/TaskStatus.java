@@ -1,5 +1,5 @@
 package com.therealazimbek.spring.eventmasterapp.models;
 
 public enum TaskStatus {
-    PENDING, COMPLETED
+    NOT_STARTED, IN_PROGRESS, COMPLETED
 }

@@ -34,7 +34,7 @@
         </div>
         <div class="container">
             <header>
-                <div class="logo"><a href="index.html">EventMaster</a></div>
+                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
                 <nav class="nav">
                     <a th:href="@{/home}">Home</a>
                     <a class="active" th:href="@{/events}">Events</a>
@@ -102,8 +102,8 @@
                             <li class="table-row">
                                 <div class="col col-1">Venue</div>
                                 <div class="col col-2">
-                                    <a href="venue.html"
-                                        >Almaty Hotel Restauraunt</a
+                                    <a href="venues.html"
+                                        >Almaty Hotel Restaurant</a
                                     >
                                 </div>
                             </li>
@@ -118,18 +118,22 @@
                             <li class="table-row">
                                 <div class="col col-1">Actions</div>
                                 <div class="col col-2 actions">
-                                    <a href="" class="btn btn-action">Join</a>
+                                    <a href="" class="btn btn-action"
+                                        th:if="${event.user.username != user.username}">Join</a>
                                     <a href="" class="btn btn-action-orange"
+                                       th:if="${event.user.username == user.username}"
                                         >Edit</a
                                     >
                                     <a
                                         href="javascript:addVendor();"
                                         class="btn btn-action-orange"
+                                        th:if="${event.user.username == user.username}"
                                         >Add vendor</a
                                     >
                                     <a
                                         href="javascript:alert('Are you sere?')"
                                         class="btn btn-action-red"
+                                        th:if="${event.user.username == user.username}"
                                         >Delete</a
                                     >
                                 </div>
@@ -145,6 +149,6 @@
                 </p>
             </footer>
         </div>
-        <script src="./js/app.js"></script>
+        <script th:src="@{/js/app.js}"></script>
     </body>
 </html>

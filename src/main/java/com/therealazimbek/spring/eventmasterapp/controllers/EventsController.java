@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Controller
@@ -51,6 +52,8 @@ public class EventsController {
         model.addAttribute("events",
                 eventService.findAll().stream().filter(
                         event -> event.getUser() != userService.findByUsername(authentication.getName())
+                                    && (LocalDateTime.now().isBefore(event.getStartDate()) ||
+                                        LocalDateTime.now().isEqual(event.getStartDate()))
                 ));
     }
 
@@ -75,10 +78,11 @@ public class EventsController {
     }
 
     @GetMapping("/{id}")
-    public String event(@PathVariable String id, Model model) {
+    public String event(@PathVariable String id, Model model, Authentication authentication) {
         try {
             Event event = eventService.findById(UUID.fromString(id));
             model.addAttribute("event", event);
+            model.addAttribute("user", userService.findByUsername(authentication.getName()));
             return "event";
         } catch (ResponseStatusException e) {
             return "notfound";

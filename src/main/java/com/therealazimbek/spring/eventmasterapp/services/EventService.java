@@ -1,8 +1,6 @@
 package com.therealazimbek.spring.eventmasterapp.services;
 
-import com.therealazimbek.spring.eventmasterapp.models.Event;
-import com.therealazimbek.spring.eventmasterapp.models.User;
-import com.therealazimbek.spring.eventmasterapp.models.UserEvent;
+import com.therealazimbek.spring.eventmasterapp.models.*;
 import com.therealazimbek.spring.eventmasterapp.repositories.EventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +39,16 @@ public class EventService {
     public List<UserEvent> findEventUsers(UUID id) {
         Event event = findById(id);
         return event.getEventUsers();
+    }
+
+    public List<Vendor> findAllEventVenues(UUID id) {
+        Event event = findById(id);
+        return event.getVendors();
+    }
+
+    public Venue findEventVendor(UUID id) {
+        Event event = findById(id);
+        return event.getVenue();
     }
 
     public void save(Event event) {
