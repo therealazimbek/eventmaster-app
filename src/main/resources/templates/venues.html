@@ -57,178 +57,59 @@
                 </div>
             </header>
             <main class="event-main no-bg">
-                <section class="event-section user-events">
+                <section class="event-section user-events single">
                     <h2 class="bg-h">Venues</h2>
                     <a
                         title="New event"
                         class="btn fixed-btn"
-                        href="createVenue.html"
+                        th:href="@{/venues/create}"
                         target="_blank"
                         >Add a venue</a
                     >
-                    <a
-                        title="Join by code"
-                        class="btn fixed-btn s"
-                        href="createVendor.html"
-                        target="_blank"
-                        >Add a vendor</a
-                    >
+
 
                     <div class="events grid-events">
-                        <ul class="responsive-table">
+                        <ul class="responsive-table" th:if="${not #lists.isEmpty(venues)}" th:each="venue: ${venues}">
                             <li class="table-row">
                                 <div class="col col-1">Name</div>
                                 <div class="col col-2">
-                                    <a href="venues.html">
-                                        Almaty Hotel Restauraunt</a
+                                    <a th:href="@{/venues/{id}(id=${venue.getId()})}"
+                                       th:text="${venue.getName()}">
+                                        </a
                                     >
                                 </div>
                             </li>
 
                             <li class="table-row">
                                 <div class="col col-1">Phone</div>
-                                <div class="col col-2">+7 707 666 66 66</div>
+                                <div class="col col-2" th:text="${venue.getPhone()}"></div>
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Email</div>
-                                <div class="col col-2">almaty@hotel.kz</div>
+                                <div class="col col-2" th:text="${venue.getEmail()}"></div>
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Price</div>
-                                <div class="col col-2">30 000 ₸ per person</div>
+                                <div class="col col-2" th:text="${#numbers.formatCurrency(venue.getPrice().intValue())}"></div>
                             </li>
 
                             <li class="table-row">
                                 <div class="col col-1">City</div>
-                                <div class="col col-2">Almaty</div>
+                                <div class="col col-2" th:text="${venue.getCity()}"></div>
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Address</div>
-                                <div class="col col-2">Al Farabi, 34</div>
+                                <div class="col col-2" th:text="${venue.getAddress()}"></div>
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Capacity</div>
-                                <div class="col col-2">400</div>
+                                <div class="col col-2" th:text="${venue.getCapacity()}"></div>
                             </li>
 
-                            <li class="table-row">
-                                <div class="col col-1">Actions</div>
-                                <div class="col col-2 actions">
-                                    <a
-                                        href="venues.html"
-                                        class="btn btn-action-orange"
-                                        >Edit</a
-                                    >
-                                    <a
-                                        href="javascript:alert('Are you sere?')"
-                                        class="btn btn-action-red"
-                                        >Delete</a
-                                    >
-                                </div>
-                            </li>
                         </ul>
-                        <ul class="responsive-table">
-                            <li class="table-row">
-                                <div class="col col-1">Name</div>
-                                <div class="col col-2">
-                                    <a href="venues.html">
-                                        Almaty Hotel Restauraunt</a
-                                    >
-                                </div>
-                            </li>
-
-                            <li class="table-row">
-                                <div class="col col-1">Phone</div>
-                                <div class="col col-2">+7 707 666 66 66</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Email</div>
-                                <div class="col col-2">almaty@hotel.kz</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Price</div>
-                                <div class="col col-2">30 000 ₸ per person</div>
-                            </li>
-
-                            <li class="table-row">
-                                <div class="col col-1">City</div>
-                                <div class="col col-2">Almaty</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Address</div>
-                                <div class="col col-2">Al Farabi, 34</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Capacity</div>
-                                <div class="col col-2">400</div>
-                            </li>
-
-                            <li class="table-row">
-                                <div class="col col-1">Actions</div>
-                                <div class="col col-2 actions">
-                                    <a href="" class="btn btn-action-orange"
-                                        >Edit</a
-                                    >
-                                    <a
-                                        href="javascript:alert('Are you sere?')"
-                                        class="btn btn-action-red"
-                                        >Delete</a
-                                    >
-                                </div>
-                            </li>
-                        </ul>
-                        <ul class="responsive-table">
-                            <li class="table-row">
-                                <div class="col col-1">Name</div>
-                                <div class="col col-2">
-                                    <a href="venues.html">
-                                        Almaty Hotel Restauraunt</a
-                                    >
-                                </div>
-                            </li>
-
-                            <li class="table-row">
-                                <div class="col col-1">Phone</div>
-                                <div class="col col-2">+7 707 666 66 66</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Email</div>
-                                <div class="col col-2">almaty@hotel.kz</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Price</div>
-                                <div class="col col-2">30 000 ₸ per person</div>
-                            </li>
-
-                            <li class="table-row">
-                                <div class="col col-1">City</div>
-                                <div class="col col-2">Almaty</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Address</div>
-                                <div class="col col-2">Al Farabi, 34</div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Capacity</div>
-                                <div class="col col-2">400</div>
-                            </li>
-
-                            <li class="table-row">
-                                <div class="col col-1">Actions</div>
-                                <div class="col col-2 actions">
-                                    <a
-                                        href="venues.html"
-                                        class="btn btn-action-orange"
-                                        >Edit</a
-                                    >
-                                    <a
-                                        href="javascript:alert('Are you sere?')"
-                                        class="btn btn-action-red"
-                                        >Delete</a
-                                    >
-                                </div>
-                            </li>
-                        </ul>
+                    </div>
+                    <div class="div" th:if="${#lists.isEmpty(venues)}">
+                        Venues list is empty
                     </div>
                 </section>
             </main>

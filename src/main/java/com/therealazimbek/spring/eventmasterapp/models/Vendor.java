@@ -15,24 +15,24 @@ public class Vendor {
     private Long id;
 
     @NotBlank(message="Name is required")
-    @Size(min=20, message="Name must be at least 20 characters long")
+    @Size(min=10, message="Name must be at least 10 characters long")
     private String name;
 
-    @NotBlank(message="Country is required")
-    @Size(min=20, message="Country must be at least 20 characters long")
+//    @NotBlank(message="Country is required")
+//    @Size(min=3, message="Country must be at least 3 characters long")
     private String country;
 
     @NotBlank(message="City is required")
-    @Size(min=20, message="City must be at least 20 characters long")
+    @Size(min=3, message="City must be at least 3 characters long")
     private String city;
 
     @NotBlank(message="Address is required")
-    @Size(min=20, message="Address must be at least 20 characters long")
+    @Size(min=10, message="Address must be at least 10 characters long")
     private String address;
 
-    @NotBlank(message = "Specify price per one person")
-    @DecimalMax(value = "100")
-    @Digits(fraction = 0, message = "Enter only numbers", integer = 5)
+    @NotNull(message = "Specify price per one person")
+    @DecimalMax(value = "1000")
+    @Digits(fraction = 0, message = "Enter only numbers", integer = 4)
     private BigDecimal price;
 
     @NotBlank(message="Phone is required and it should be unique")
@@ -45,8 +45,6 @@ public class Vendor {
     @Email
     private String email;
 
-    @NotBlank(message="Details is required")
-    @Size(min=20, message="Name must be at least 20 characters long")
     private String details;
 
     @ManyToMany(mappedBy = "vendors")

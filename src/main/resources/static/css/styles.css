@@ -362,7 +362,7 @@ input:focus {
 .fixed-btn {
     /* font-size: 50px; */
     position: fixed;
-    bottom: 50px;
+    bottom: 100px;
     right: 50px;
 
     color: black;
@@ -371,7 +371,7 @@ input:focus {
 }
 
 .s {
-    bottom: 100px;
+    bottom: 150px;
 }
 
 .modal {
@@ -528,4 +528,16 @@ textarea {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
+}
+
+.single {
+    flex:1;
+    justify-content: flex-start;
+}
+
+.grid-single {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-auto-rows: auto;
+    /* grid-gap: 1rem; */
 }

@@ -22,13 +22,13 @@ public class Event {
     @Size(min=10, message="Name must be at least 10 characters long")
     private String name;
 
-    @DecimalMax(value = "100000")
-    @Digits(fraction = 0, message = "Enter only numbers", integer = 5)
+    @DecimalMax(value = "1000")
+    @Digits(fraction = 0, message = "Enter only numbers", integer = 3)
     private BigDecimal price;
 
     @NotNull(message = "Budget is required")
-    @DecimalMax(value = "100000000")
-    @Digits(fraction = 0, message = "Enter only numbers", integer = 8)
+    @DecimalMax(value = "100000")
+    @Digits(fraction = 0, message = "Enter only numbers", integer = 5)
     private BigDecimal budget;
 
     @NotNull(message = "Enter maximum number of guests")

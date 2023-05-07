@@ -17,25 +17,24 @@ public class Venue {
     private Long id;
 
     @NotBlank(message="Name is required")
-    @Size(min=20, message="Name must be at least 20 characters long")
+    @Size(min=10, message="Name must be at least 10 characters long")
     private String name;
 
     @NotBlank(message="City is required")
-    @Size(min=20, message="City must be at least 20 characters long")
     private String city;
 
     @NotBlank(message="Address is required")
-    @Size(min=20, message="Address must be at least 20 characters long")
+    @Size(min=10, message="Address must be at least 10 characters long")
     private String address;
 
-    @NotBlank(message = "Enter maximum number of max capacity")
-    @Min(value = 10, message = "Minimum 10 is allowed")
+    @NotNull(message = "Enter maximum number of max capacity")
+    @Min(value = 30, message = "Minimum 30 is allowed")
     @Digits(fraction = 0, message = "Enter only numbers", integer = 4)
     private BigDecimal capacity;
 
-    @NotBlank(message = "Specify price per event")
-    @DecimalMax(value = "100")
-    @Digits(fraction = 0, message = "Enter only numbers", integer = 5)
+    @NotNull(message = "Specify price per event")
+    @DecimalMax(value = "1000")
+    @Digits(fraction = 0, message = "Enter only numbers", integer = 3)
     private BigDecimal price;
 
     @NotBlank(message="Phone is required and it should be unique")
@@ -48,8 +47,7 @@ public class Venue {
     @Email
     private String email;
 
-    @NotBlank(message="Name is required")
-    @Size(min=20, message="Name must be at least 20 characters long")
+    @NotBlank(message="Details is required")
     private String details;
 
     @OneToMany(mappedBy = "venue", cascade = CascadeType.PERSIST)

@@ -110,7 +110,7 @@
                             <div class="link">
                                     <a th:href="@{/venues/{id}(id=${venue.getId()})}"
                                        th:text="${venue.getName()}"></a>
-                                <p th:text="From ${venue.getPrice()}"></p>
+                                <p th:text="${#numbers.formatCurrency(venue.getPrice().intValue())}"></p>
                             </div>
                         </div>
                         <div class="links" th:if="${#lists.isEmpty(venues)}">
@@ -126,7 +126,7 @@
                             <div class="link">
                                 <a th:href="@{/vendors/{id}(id=${vendor.getId()})}"
                                    th:text="${vendor.getName()}"></a>
-                                <p th:text="${vendor.getPrice()}"></p>
+                                <p th:text="${#numbers.formatCurrency(vendor.getPrice().intValue())}"></p>
                             </div>
                         </div>
                         <div class="links" th:if="${#lists.isEmpty(vendors)}">
