@@ -90,14 +90,6 @@
                     </li>
 
                     <li class="table-row">
-                        <div class="col col-1">City</div>
-                        <div class="col col-2" th:text="${vendor.getCity()}"></div>
-                    </li>
-                    <li class="table-row">
-                        <div class="col col-1">Country</div>
-                        <div class="col col-2" th:text="${vendor.getCountry()}"></div>
-                    </li>
-                    <li class="table-row">
                         <div class="col col-1">Category</div>
                         <div class="col col-2">
                             <a th:href="@{/vendors/categories/{id}(id=${vendor.category.getId()})}" th:text="${vendor.getCategory().getTitle()}"
@@ -105,23 +97,6 @@
                             >
                         </div>
                     </li>
-
-<!--                    <li class="table-row">-->
-<!--                        <div class="col col-1">Actions</div>-->
-<!--                        <div class="col col-2 actions">-->
-<!--                            <a-->
-<!--                                    href="vendor.html"-->
-<!--                                    class="btn btn-action-orange"-->
-<!--                            >Edit</a-->
-<!--                            >-->
-
-<!--                            <a-->
-<!--                                    href="javascript:alert('Are you sere?')"-->
-<!--                                    class="btn btn-action-red"-->
-<!--                            >Delete</a-->
-<!--                            >-->
-<!--                        </div>-->
-<!--                    </li>-->
                 </ul>
             </div>
             <div class="div" th:if="${#lists.isEmpty(vendors)}">

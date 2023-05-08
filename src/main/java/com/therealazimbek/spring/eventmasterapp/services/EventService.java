@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -53,5 +54,14 @@ public class EventService {
 
     public void save(Event event) {
         eventRepository.save(event);
+    }
+
+    public Event findByCode(String code) {
+        Optional<Event> e = findAll().stream().filter(event -> event.getCode().equals(code)).findFirst();
+        if (e.isPresent()) {
+            return e.get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

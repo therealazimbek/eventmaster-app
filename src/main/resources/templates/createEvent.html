@@ -55,15 +55,13 @@
                                       th:if="${#fields.hasErrors('name')}"
                                       th:errors="*{name}"></span>
                             </div>
+                            <div class="input-area">
+                                <select name="venue" id="venue">
+                                    <option th:each="venue: ${venues}" th:value="${venue.getId()}" th:text="${venue.getName()}">
 
-<!--                            <div class="input-area">-->
-<!--                                <input-->
-<!--                                    type="text"-->
-<!--                                    name="address"-->
-<!--                                    id="address"-->
-<!--                                    placeholder="Address"-->
-<!--                                />-->
-<!--                            </div>-->
+                                    </option>
+                                </select>
+                            </div>
                             <div class="input-area">
                                 <input
                                     type="number"

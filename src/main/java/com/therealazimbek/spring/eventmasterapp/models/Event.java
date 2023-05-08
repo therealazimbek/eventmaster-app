@@ -3,6 +3,9 @@ package com.therealazimbek.spring.eventmasterapp.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 public class Event {
 
@@ -51,6 +55,9 @@ public class Event {
 
     private String description;
 
+    @Column(unique = true)
+    private String code;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -64,8 +71,8 @@ public class Event {
 
     @ManyToMany(cascade = CascadeType.REFRESH)
     @JoinTable(name = "event_vendor",
-            joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"))
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "vendor_id"))
     private List<Vendor> vendors;
 
     @OneToMany(mappedBy = "event", cascade = CascadeType.PERSIST)
