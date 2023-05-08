@@ -105,7 +105,7 @@
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Members</div>
-                                <div class="col col-2" th:text="${event.getMaxGuests()}"></div>
+                                <div class="col col-2" th:text="${event.getEventUsers().size()} + '/' + ${event.getMaxGuests()}"></div>
                             </li>
 
                             <li class="table-row">
@@ -139,8 +139,12 @@
                             <li class="table-row">
                                 <div class="col col-1">Actions</div>
                                 <div class="col col-2 actions">
-                                    <a class="btn btn-action"
-                                        th:if="${event.user.username != user.username}">Join</a>
+                                    <form th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)}" th:action="@{/events/{id}/join(id=${event.getId()})}" th:method="put">
+                                        <button type="submit" class="btn btn-green">Join</button>
+                                    </form>
+                                    <form th:if="${event.user.username != user.username and userJoinedEvents.contains(event)}" th:action="@{/events/{id}/leave(id=${event.getId()})}" th:method="put">
+                                        <button type="submit" class="btn    ">Leave</button>
+                                    </form>
                                     <a th:href="@{/events/{id}/edit(id=${event.getId()})}" class="btn btn-action-orange"
                                        th:if="${event.user.username == user.username}"
                                         >Edit</a

@@ -56,6 +56,8 @@ public class Event {
     private String description;
 
     @Column(unique = true)
+    @NotBlank(message="Code is required")
+    @Size(min=5, message="Code must be at least 5 characters long")
     private String code;
 
     @ManyToOne

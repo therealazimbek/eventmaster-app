@@ -14,7 +14,7 @@
   <header>
     <div class="logo"><a th:href="@{/}">EventMaster</a></div>
     <nav class="nav">
-      <a class="active" th:href="@{/home}">Home</a>
+      <a th:href="@{/home}">Home</a>
       <a th:href="@{/events}">Events</a>
       <a th:href="@{/features}">Features</a>
       <a th:href="@{/about}">About us</a>
@@ -35,7 +35,7 @@
     </div>
   </header>
   <main class="no-bg user-home">
-    <h1>Welcome back, <span sec:authentication="name"></span></h1>
+    <h1>Welcome back, <span th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></span></h1>
 <!--    <div class="cards">-->
 <!--      <div class="card">-->
 <!--        <h3>-->

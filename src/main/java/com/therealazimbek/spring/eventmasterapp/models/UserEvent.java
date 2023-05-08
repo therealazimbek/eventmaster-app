@@ -12,19 +12,23 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserEvent {
 
-    public UserEvent(User user, Event event, UserRole userRole) {
-        this.user = user;
-        this.event = event;
+    public UserEvent(UserEventId id, UserRole userRole, User user, Event event) {
+        this.userEventId = id;
         this.userRole = userRole;
+        this.event = event;
+        this.user = user;
     }
 
-    @Id
+    @EmbeddedId
+    private UserEventId userEventId;
+
     @ManyToOne
+    @MapsId("userId")
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Id
     @ManyToOne
+    @MapsId("eventId")
     @JoinColumn(name = "event_id")
     private Event event;
 

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -48,6 +49,14 @@ public class UserService {
     public List<Event> findAllUserEvents(Long id) {
         User user = findById(id);
         return user.getCreatedEvents();
+    }
+
+    public List<Event> userJoinedEvents(User user) {
+        List<Event> joinedEvents = new ArrayList<>();
+        user.getUserEvents().forEach(
+                userEvent -> joinedEvents.add(userEvent.getEvent())
+        );
+        return joinedEvents;
     }
 
     public void save(User user) {

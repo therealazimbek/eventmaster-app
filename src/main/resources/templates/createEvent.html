@@ -76,6 +76,18 @@
                             </div>
                             <div class="input-area">
                                 <input
+                                        type="text"
+                                        name="code"
+                                        id="code"
+                                        placeholder="Code for join"
+                                        th:field="*{code}"
+                                />
+                                <span class="validationError"
+                                      th:if="${#fields.hasErrors('code')}"
+                                      th:errors="*{code}"></span>
+                            </div>
+                            <div class="input-area">
+                                <input
                                     type="number"
                                     name="max-guests"
                                     id="max-guests"

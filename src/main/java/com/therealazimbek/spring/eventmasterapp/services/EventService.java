@@ -2,6 +2,7 @@ package com.therealazimbek.spring.eventmasterapp.services;
 
 import com.therealazimbek.spring.eventmasterapp.models.*;
 import com.therealazimbek.spring.eventmasterapp.repositories.EventRepository;
+import com.therealazimbek.spring.eventmasterapp.repositories.UserEventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +20,13 @@ public class EventService {
 
     private final EventRepository eventRepository;
 
+    private final UserEventRepository userEventRepository;
+
     @Autowired
-    public EventService(UserRepository userRepository, EventRepository eventRepository) {
+    public EventService(UserRepository userRepository, EventRepository eventRepository, UserEventRepository userEventRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.userEventRepository = userEventRepository;
     }
 
     public List<Event> findAll() {
@@ -63,5 +67,28 @@ public class EventService {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+    }
+
+    public void addGuest(Event event, User user, UserRole host) {
+        if (event.getId() != null && user != null) {
+            List<UserEvent> eventUsers = event.getEventUsers();
+            UserEventId userEventId = new UserEventId(user.getId(), event.getId());
+            UserEvent guest = new UserEvent(userEventId, host, user, event);
+            eventUsers.add(guest);
+            eventRepository.save(event);
+        }
+    }
+
+    public void removeGuest(Event event, User user) {
+        if (event.getId() != null && user != null && event.getUser() != user) {
+            user.getUserEvents().removeIf(e -> e.getEvent().getId() == event.getId());
+            UserEvent userEvent = userEventRepository.findAll().stream().filter(e -> e.getEvent() == event && e.getUser() == user)
+                    .findFirst().get();
+            userEventRepository.delete(userEvent);
+        }
+    }
+
+    public void delete(String id) {
+        eventRepository.deleteById(UUID.fromString(id));
     }
 }

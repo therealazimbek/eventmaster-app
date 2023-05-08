@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" >
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+  <link rel="icon" th:href="@{/images/favicon.ico}" />
+  <title>404</title>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo"><a th:href="@{/}">EventMaster</a></div>
+    <nav class="nav">
+      <a th:href="@{/home}">Home</a>
+      <a th:href="@{/events}">Events</a>
+      <a th:href="@{/features}">Features</a>
+      <a th:href="@{/about}">About us</a>
+    </nav>
+    <div class="login-area">
+      <div class="flex-row" sec:authorize="isAuthenticated()">
+        <form th:action="@{/logout}" method="post">
+          <button type="submit" class="btn btn-green">Logout</button>
+        </form>
+        <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+        <a th:href="@{/profile}" class="btn">Profile</a>
+
+      </div>
+      <div sec:authorize="isAnonymous()">
+        <a th:href="@{/login}" class="btn btn-green">Login</a>
+        <a th:href="@{/register}" class="btn">Register</a>
+      </div>
+    </div>
+  </header>
+  <main id="home-intro">
+    <section class="intro">
+      <p>SOMETHING WENT WRONG! Our engineers are on it.</p>
+      <div>
+        <a th:href="@{/events}" class="btn btn-section"
+        >EXPLORE EVENTS</a
+        >
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p class="footer-text">
+      &copy; 2023 EventMaster. All rights are reserved. With Love,
+      Azimbek
+    </p>
+  </footer>
+</div>
+</body>
+</html>

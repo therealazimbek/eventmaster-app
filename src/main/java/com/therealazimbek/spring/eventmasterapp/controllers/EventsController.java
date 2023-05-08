@@ -1,9 +1,6 @@
 package com.therealazimbek.spring.eventmasterapp.controllers;
 
-import com.therealazimbek.spring.eventmasterapp.models.Event;
-import com.therealazimbek.spring.eventmasterapp.models.User;
-import com.therealazimbek.spring.eventmasterapp.models.UserEvent;
-import com.therealazimbek.spring.eventmasterapp.models.UserRole;
+import com.therealazimbek.spring.eventmasterapp.models.*;
 import com.therealazimbek.spring.eventmasterapp.services.EventService;
 import com.therealazimbek.spring.eventmasterapp.services.UserService;
 import com.therealazimbek.spring.eventmasterapp.services.VendorService;
@@ -19,8 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 @Controller
 @RequestMapping("/events")
@@ -61,10 +61,16 @@ public class EventsController {
     }
 
     @ModelAttribute
+    public void userJoinedEvents(Model model, Authentication authentication) {
+        User user = userService.findByUsername(authentication.getName());
+        model.addAttribute("userJoinedEvents", userService.userJoinedEvents(user));
+    }
+
+    @ModelAttribute
     public void allEvents(Model model, Authentication authentication) {
         model.addAttribute("events",
                 eventService.findAll().stream().filter(
-                        event -> event.getUser() != userService.findByUsername(authentication.getName())
+                        event -> !event.getIsPrivate() && event.getUser() != userService.findByUsername(authentication.getName())
                                     && (LocalDateTime.now().isBefore(event.getStartDate()) ||
                                         LocalDateTime.now().isEqual(event.getStartDate()))
                 ).toList());
@@ -86,25 +92,33 @@ public class EventsController {
         if (bindingResult.hasErrors()) {
             return "/createEvent";
         }
-        event.setUser(userService.findByUsername(authentication.getName()));
-        List<UserEvent> eventUsers = event.getEventUsers();
-        eventUsers.add(new UserEvent(userService.findByUsername(authentication.getName()), event, UserRole.HOST));
+        User user = userService.findByUsername(authentication.getName());
+        event.setUser(user);
         eventService.save(event);
         return "redirect:/events";
     }
 
+
+
     @GetMapping("/{id}")
     public String event(@PathVariable String id, Model model, Authentication authentication) {
         try {
-            Event event = eventService.findById(UUID.fromString(id));
-            model.addAttribute("event", event);
-            model.addAttribute("user", userService.findByUsername(authentication.getName()));
-            model.addAttribute("venue", event.getVenue());
-            model.addAttribute("vendors", event.getVendors());
-            model.addAttribute("allVendors", vendorService.findAll());
-            return "event";
+            Pattern UUID_REGEX =
+                    Pattern.compile("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$");
+
+            if (UUID_REGEX.matcher(id).matches()) {
+                UUID uuid = UUID.fromString(id);
+                Event event = eventService.findById(uuid);
+                model.addAttribute("event", event);
+                model.addAttribute("user", userService.findByUsername(authentication.getName()));
+                model.addAttribute("venue", event.getVenue());
+                model.addAttribute("vendors", event.getVendors());
+                model.addAttribute("allVendors", vendorService.findAll());
+                return "event";
+            }
+            return "redirect:/notfound";
         } catch (ResponseStatusException e) {
-            return "notfound";
+            return "redirect:/notfound";
         }
     }
 
@@ -112,31 +126,52 @@ public class EventsController {
     public String update(@PathVariable String id, Model model, Authentication authentication) {
         try {
             Event event = eventService.findById(UUID.fromString(id));
-            model.addAttribute("event", event);
-            model.addAttribute("user", userService.findByUsername(authentication.getName()));
-            model.addAttribute("vendors", vendorService.findAll());
-            model.addAttribute("venues", venueService.findAll());
-            return "updateEvent";
+            if (Objects.equals(event.getUser().getUsername(), authentication.getName())) {
+                model.addAttribute("event", event);
+                model.addAttribute("user", userService.findByUsername(authentication.getName()));
+                model.addAttribute("vendors", vendorService.findAll());
+                model.addAttribute("venues", venueService.findAll());
+                return "updateEvent";
+            } else {
+                return "redirect:/nopermission";
+            }
+
         } catch (ResponseStatusException e) {
-            return "notfound";
+            return "redirect:/notfound";
+        }
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public String delete(@PathVariable String id, Authentication authentication) {
+        try {
+            Event event = eventService.findById(UUID.fromString(id));
+            if (Objects.equals(event.getUser().getUsername(), authentication.getName())) {
+                eventService.delete(id);
+                return "redirect:/events";
+            } else {
+                return "redirect:/nopermission";
+            }
+
+        } catch (ResponseStatusException e) {
+            return "redirect:/notfound";
         }
     }
 
     @PutMapping("/{id}/edit")
-    public String update(@PathVariable String id, @Valid Event event) {
+    public String update(@PathVariable String id, @Valid Event event, Authentication authentication) {
         try {
             Event urlEvent = eventService.findById(UUID.fromString(id));
-            if(urlEvent.getId().equals(event.getId())) {
+            if(urlEvent.getId().equals(event.getId()) && Objects.equals(urlEvent.getUser().getUsername(), authentication.getName())) {
                 event.setUser(urlEvent.getUser());
 
                 eventService.save(event);
 
                 return "events";
             } else {
-                return "notfound";
+                return "redirect:/nopermission";
             }
         } catch (ResponseStatusException e) {
-            return "notfound";
+            return "redirect:/notfound";
         }
     }
 
@@ -145,27 +180,57 @@ public class EventsController {
         try {
             Event urlEvent = eventService.findById(UUID.fromString(id));
             log.info(String.valueOf(event.getVendors().size()));
-            urlEvent.setVendors(event.getVendors());
-
+            List<Vendor> vendors = urlEvent.getVendors();
+            HashSet<Vendor> hashSet = new HashSet<>(vendors);
+            hashSet.addAll(event.getVendors());
+            urlEvent.setVendors(hashSet.stream().toList());
             eventService.save(urlEvent);
 
             return "events";
         } catch (ResponseStatusException e) {
-            return "notfound";
+            return "redirect:/notfound";
         }
     }
 
-    @PutMapping("/join")
-    public String join(String code, Authentication authentication) {
+    @PutMapping("/joinByCode")
+    public String joinByCode(String code, Authentication authentication) {
         Event event = eventService.findByCode(code);
         User user = userService.findByUsername(authentication.getName());
         if (event.getUser() != user && event.getMaxGuests().intValue() > event.getEventUsers().size()) {
-            List<UserEvent> eventUsers = event.getEventUsers();
-            eventUsers.add(new UserEvent(user, event, UserRole.GUEST));
-            eventService.save(event);
+            eventService.addGuest(event, user, UserRole.GUEST);
             return "redirect:/events";
         }
 
-        return "redirect:/events";
+        return "redirect:/nopermission";
+    }
+
+    @PutMapping("/{id}/join")
+    public String joinUser(@PathVariable String id, Authentication authentication) {
+        try {
+            Event event = eventService.findById(UUID.fromString(id));
+            User user = userService.findByUsername(authentication.getName());
+            if (event.getUser() != user && event.getMaxGuests().intValue() > event.getEventUsers().size()) {
+                eventService.addGuest(event, user, UserRole.GUEST);
+                return "redirect:/events/{id}";
+            }
+            return "redirect:/notfound";
+        } catch (ResponseStatusException e) {
+            return "redirect:/notfound";
+        }
+    }
+
+    @PutMapping("/{id}/leave")
+    public String leaveGuest(@PathVariable String id, Authentication authentication) {
+        try {
+            Event event = eventService.findById(UUID.fromString(id));
+            User user = userService.findByUsername(authentication.getName());
+            if (event.getUser() != user) {
+                eventService.removeGuest(event, user);
+                return "redirect:/events";
+            }
+            return "redirect:/notfound";
+        } catch (ResponseStatusException e) {
+            return "redirect:/notfound";
+        }
     }
 }

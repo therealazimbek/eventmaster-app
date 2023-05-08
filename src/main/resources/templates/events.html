@@ -16,7 +16,7 @@
     <body>
         <div class="modal">
             <div>
-                <form th:method="put" th:action="@{/events/join}" class="form">
+                <form th:method="put" th:action="@{/events/joinByCode}" class="form">
                     <input
                         type="text"
                         name="code"
@@ -57,7 +57,7 @@
                 </div>
             </header>
             <main class="event-main no-bg">
-                <section class="event-section user-events">
+                <section class="event-section">
                     <h2 class="bg-h">My events</h2>
                     <a
                         title="New event"
@@ -120,16 +120,73 @@
                                         th:href="@{/events/{id}/edit(id=${userEvent.getId()})}"
                                         class="btn btn-action-orange"
                                 >Edit</a
-                                ><a
-                                        th:href="@{/events/{id}/delete(id=${userEvent.getId()})}"
-                                        class="btn btn-action-red"
-                                >Delete</a
                                 >
+                                    <form th:action="@{/events/{id}/delete(id=${userEvent.getId()})}" th:method="delete">
+                                        <button type="submit" class="btn btn-action-red">Delete</button>
+                                    </form>
                                 </div>
                         </ul>
                     </div>
                     <div class="events grid-events" th:if="${#lists.isEmpty(userEvents)}">
                         No user events
+                    </div>
+                </section>
+
+                <section class="event-section user-events">
+                    <h2 class="bg-h">My joined events</h2>
+
+                    <div class="events grid-events" th:if="${not #lists.isEmpty(userJoinedEvents)}">
+
+                        <ul class="responsive-table" th:each="userEvent: ${userJoinedEvents}">
+                            <li class="table-row">
+                                <div class="col col-1">Title</div>
+                                <div class="col col-2">
+                                    <a th:href="@{/events/{id}(id=${userEvent.getId()})}"
+                                       th:text="${userEvent.getName()}"></a
+                                    >
+                                </div>
+                            </li>
+
+                            <li class="table-row">
+                                <div class="col col-1">Date</div>
+                                <div class="col col-2" th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}">
+
+                                </div>
+                            </li>
+                            <li class="table-row">
+                                <div class="col col-1">Address</div>
+                                <div class="col col-2" th:text="${userEvent.getVenue()?.getAddress()}">
+
+                                </div>
+                            </li>
+                            <li class="table-row">
+                                <div class="col col-1">Members</div>
+                                <div class="col col-2" th:text="${userEvent.getMaxGuests()}"></div>
+                            </li>
+
+                            <li class="table-row">
+                                <div class="col col-1">Price</div>
+                                <div class="col col-2" th:text="${userEvent.getPrice()}"></div>
+                            </li>
+
+                            <li class="table-row">
+                                <div class="col col-1">Private</div>
+                                <div class="col col-2" th:text="${userEvent.getIsPrivate()}"></div>
+                            </li>
+                            <li class="table-row">
+                                <div class="col col-1">Actions</div>
+                                <div class="col col-2 actions">
+                                    <a th:href="@{/events/{id}(id=${userEvent.getId()})}" class="btn btn-action"
+                                    >More</a
+                                    >
+                                    <form th:action="@{/events/{id}/leave(id=${userEvent.getId()})}" th:method="put">
+                                        <button type="submit" class="btn btn-action-red">Leave</button>
+                                    </form>
+                                </div>
+                        </ul>
+                    </div>
+                    <div class="events grid-events" th:if="${#lists.isEmpty(userJoinedEvents)}">
+                        No active joined  events
                     </div>
                 </section>
 
@@ -161,7 +218,7 @@
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Members</div>
-                                <div class="col col-2" th:text="${event.getMaxGuests()}"></div>
+                                <div class="col col-2" th:text="${event.getEventUsers().size()} + '/' + ${event.getMaxGuests()}"></div>
                             </li>
 
                             <li class="table-row">
@@ -173,11 +230,7 @@
                                 <div class="col col-2 actions">
                                     <a th:href="@{/events/{id}(id=${event.getId()})}" class="btn btn-action"
                                     >More</a
-                                    ><a
-                                        href="javascript:alert('Joined!')"
-                                        class="btn btn-action"
-                                >Join</a
-                                >
+                                    >
                                 </div>
                         </ul>
                     </div>

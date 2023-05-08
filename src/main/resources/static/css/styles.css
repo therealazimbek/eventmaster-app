@@ -283,7 +283,7 @@ input:focus {
     width: 80%;
     max-width: 1000px;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 
 .responsive-table li {
@@ -347,13 +347,13 @@ input:focus {
     color: white;
 }
 
-.actions > a.btn-action-orange:hover {
+.btn-action-orange:hover {
     border-color: blue;
     background-color: blue;
     color: white;
 }
 
-.actions > a.btn-action-red:hover {
+.btn-action-red:hover {
     border-color: red;
     background-color: red;
     color: white;
@@ -514,6 +514,7 @@ textarea {
 
 .grid-events > ul {
     width: 100%;
+    border-radius: 10px;
 }
 
 .validationError {

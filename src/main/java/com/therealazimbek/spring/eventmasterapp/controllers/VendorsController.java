@@ -66,7 +66,7 @@ public class VendorsController {
             model.addAttribute("vendor", vendor);
             return "vendor";
         } catch (ResponseStatusException e) {
-            return "notfound";
+            return "redirect:/notfound";
         }
     }
 }

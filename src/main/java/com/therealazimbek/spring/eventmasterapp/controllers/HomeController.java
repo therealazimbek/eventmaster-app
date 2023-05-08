@@ -61,7 +61,7 @@ public class HomeController {
         model.addAttribute("user", user);
         model.addAttribute("events",
                 eventService.findAll().stream().filter(
-                        event -> event.getUser() != user
+                        event -> !event.getIsPrivate() && event.getUser() != user
                                 && (LocalDateTime.now().isBefore(event.getStartDate()) ||
                                 LocalDateTime.now().isEqual(event.getStartDate()))
                 ).toList());

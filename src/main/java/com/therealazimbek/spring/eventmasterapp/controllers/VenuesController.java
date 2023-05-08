@@ -56,7 +56,7 @@ public class VenuesController {
             model.addAttribute("venue", venue);
             return "venue";
         } catch (ResponseStatusException e) {
-            return "notfound";
+            return "redirect:/notfound";
         }
     }
 }
