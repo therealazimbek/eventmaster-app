@@ -35,7 +35,7 @@
                 </div>
             </header>
             <main class="no-bg user-home">
-                <h1>Welcome back, <span sec:authentication="name"></span></h1>
+                <h1>Welcome back, <span th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></span></h1>
                 <div class="cards">
                     <div class="card">
                         <h3>
@@ -50,7 +50,7 @@
                             </div>
                         </div>
                         <div class="links" th:if="${#lists.isEmpty(userEvents)}">
-                            You don't have events
+                            You don't have active   events
                         </div>
                     </div>
                     <div class="card">

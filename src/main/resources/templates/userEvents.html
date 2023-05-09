@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <link rel="icon" th:href="@{/images/favicon.ico}" />
+    <title>Events</title>
+    <script
+            src="https://kit.fontawesome.com/3ee52d1216.js"
+            crossorigin="anonymous"
+    ></script>
+</head>
+<body>
+<div class="modal">
+
+        <form th:method="put" th:action="@{/events/joinByCode}" class="form">
+            <input
+                    type="text"
+                    name="code"
+                    id="code"
+                    placeholder="Enter code"
+            />
+            <input
+                    type="submit"
+                    name="submit"
+                    value="Join"
+                    class="btn btn-green"
+            />
+        </form>
+
+</div>
+<div class="container">
+    <header>
+        <div class="logo"><a th:href="@{/}">EventMaster</a></div>
+        <nav class="nav">
+            <a th:href="@{/home}">Home</a>
+            <a class="active" th:href="@{/events}">Events</a>
+            <a th:href="@{/features}">Features</a>
+            <a th:href="@{/about}">About us</a>
+        </nav>
+        <div class="login-area">
+            <div class="flex-row" sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-green">Logout</button>
+                </form>
+                <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+                <a th:href="@{/profile}" class="btn">Profile</a>
+
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <a th:href="@{/login}" class="btn btn-green">Login</a>
+                <a th:href="@{/register}" class="btn">Register</a>
+            </div>
+        </div>
+    </header>
+    <main class="event-main no-bg">
+        <section class="event-section">
+            <h2 class="bg-h">My active events</h2>
+            <a
+                    title="New event"
+                    class="btn fixed-btn"
+                    th:href="@{/events/create}"
+                    target="_blank"
+            >Create event</a
+            >
+            <a
+                    title="Join by code"
+                    class="btn fixed-btn s"
+                    href="javascript:joinByCode();"
+            >Join by code</a
+            >
+
+            <div class="events grid-events" th:if="${not #lists.isEmpty(userEvents)}">
+
+                <ul class="responsive-table" th:each="userEvent: ${userEvents}">
+                    <li class="table-row">
+                        <div class="col col-1">Title</div>
+                        <div class="col col-2">
+                            <a th:href="@{/events/{id}(id=${userEvent.getId()})}"
+                               th:text="${userEvent.getName()}"></a
+                            >
+                        </div>
+                    </li>
+
+                    <li class="table-row">
+                        <div class="col col-1">Date</div>
+                        <div class="col col-2" th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}
+                                                        + ' - ' + ${#temporals.format(userEvent.getEndDate(), 'dd.MM.yyyy, HH:mm')}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Address</div>
+                        <div class="col col-2" th:text="${userEvent.getVenue()?.getAddress()}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Members</div>
+                        <div class="col col-2" th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
+                    </li>
+
+                    <li class="table-row">
+                        <div class="col col-1">Price</div>
+                        <div class="col col-2" th:text="${userEvent.getPrice()}"></div>
+                    </li>
+
+                    <li class="table-row">
+                        <div class="col col-1">Private</div>
+                        <div class="col col-2" th:text="${userEvent.getIsPrivate()}"></div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Actions</div>
+                        <div class="col col-2 actions">
+                            <a th:href="@{/events/{id}(id=${userEvent.getId()})}" class="btn btn-action"
+                            >More</a
+                            ><a
+                                th:href="@{/events/{id}/edit(id=${userEvent.getId()})}"
+                                class="btn btn-action-orange"
+                        >Edit</a
+                        >
+                            <form th:action="@{/events/{id}/delete(id=${userEvent.getId()})}" th:method="delete">
+                                <button type="submit" class="btn btn-action-red">Delete</button>
+                            </form>
+                        </div>
+                </ul>
+            </div>
+            <div class="events grid-events" th:if="${#lists.isEmpty(userEvents)}">
+                No user active events
+            </div>
+        </section>
+
+        <section class="event-section user-events">
+            <h2 class="bg-h">My past events</h2>
+
+            <div class="events grid-events" th:if="${not #lists.isEmpty(userPastEvents)}">
+
+                <ul class="responsive-table" th:each="userEvent: ${userPastEvents}">
+                    <li class="table-row">
+                        <div class="col col-1">Title</div>
+                        <div class="col col-2">
+                            <a th:href="@{/events/{id}(id=${userEvent.getId()})}"
+                               th:text="${userEvent.getName()}"></a
+                            >
+                        </div>
+                    </li>
+
+                    <li class="table-row">
+                        <div class="col col-1">Date</div>
+                        <div class="col col-2" th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}
+                                                        + ' - ' + ${#temporals.format(userEvent.getEndDate(), 'dd.MM.yyyy, HH:mm')}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Address</div>
+                        <div class="col col-2" th:text="${userEvent.getVenue()?.getAddress()}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Members</div>
+                        <div class="col col-2" th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
+                    </li>
+
+                    <li class="table-row">
+                        <div class="col col-1">Price</div>
+                        <div class="col col-2" th:text="${userEvent.getPrice()}"></div>
+                    </li>
+
+                    <li class="table-row">
+                        <div class="col col-1">Private</div>
+                        <div class="col col-2" th:text="${userEvent.getIsPrivate()}"></div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Actions</div>
+                        <div class="col col-2 actions">
+                            <a th:href="@{/events/{id}(id=${userEvent.getId()})}" class="btn btn-action"
+                            >More</a
+                            >
+                            <form th:action="@{/events/{id}/leave(id=${userEvent.getId()})}" th:method="put">
+                                <button type="submit" class="btn btn-action-red">Leave</button>
+                            </form>
+                        </div>
+                </ul>
+            </div>
+            <div class="events grid-events" th:if="${#lists.isEmpty(userPastEvents)}">
+                No past events
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p class="footer-text">
+            &copy; 2023 EventMaster. All rights are reserved. With Love,
+            Azimbek
+        </p>
+    </footer>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

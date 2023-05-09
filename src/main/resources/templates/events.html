@@ -15,7 +15,7 @@
     </head>
     <body>
         <div class="modal">
-            <div>
+
                 <form th:method="put" th:action="@{/events/joinByCode}" class="form">
                     <input
                         type="text"
@@ -30,7 +30,7 @@
                         class="btn btn-green"
                     />
                 </form>
-            </div>
+
         </div>
         <div class="container">
             <header>
@@ -58,7 +58,7 @@
             </header>
             <main class="event-main no-bg">
                 <section class="event-section">
-                    <h2 class="bg-h">My events</h2>
+                    <h2 class="bg-h">My events <a th:href="@{/events/user}" class="btn btn-green">All</a></h2>
                     <a
                         title="New event"
                         class="btn fixed-btn"
@@ -87,7 +87,8 @@
 
                             <li class="table-row">
                                 <div class="col col-1">Date</div>
-                                <div class="col col-2" th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}">
+                                <div class="col col-2" th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}
+                                                        + ' - ' + ${#temporals.format(userEvent.getEndDate(), 'dd.MM.yyyy, HH:mm')}">
 
                                 </div>
                             </li>
@@ -99,7 +100,7 @@
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Members</div>
-                                <div class="col col-2" th:text="${userEvent.getMaxGuests()}"></div>
+                                <div class="col col-2" th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
                             </li>
 
                             <li class="table-row">
@@ -128,7 +129,7 @@
                         </ul>
                     </div>
                     <div class="events grid-events" th:if="${#lists.isEmpty(userEvents)}">
-                        No user events
+                        No user events <a th:href="@{/events/user}" class="btn btn-green">All</a>
                     </div>
                 </section>
 
@@ -149,7 +150,8 @@
 
                             <li class="table-row">
                                 <div class="col col-1">Date</div>
-                                <div class="col col-2" th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}">
+                                <div class="col col-2" th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}
+                                                        + ' - ' + ${#temporals.format(userEvent.getEndDate(), 'dd.MM.yyyy, HH:mm')}">
 
                                 </div>
                             </li>
@@ -161,7 +163,7 @@
                             </li>
                             <li class="table-row">
                                 <div class="col col-1">Members</div>
-                                <div class="col col-2" th:text="${userEvent.getMaxGuests()}"></div>
+                                <div class="col col-2" th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
                             </li>
 
                             <li class="table-row">
@@ -191,7 +193,7 @@
                 </section>
 
                 <section class="event-section">
-                    <h2>Explore events</h2>
+                    <h2>Explore events <a th:href="@{/events/all}" class="btn btn-green">All</a></h2>
                     <div class="events grid-events" th:if="${not #lists.isEmpty(events)}">
 
                         <ul class="responsive-table" th:each="event: ${events}">
@@ -206,7 +208,8 @@
 
                             <li class="table-row">
                                 <div class="col col-1">Date</div>
-                                <div class="col col-2" th:text="${#temporals.format(event.getStartDate(), 'dd.MM.yyyy, HH:mm')}">
+                                <div class="col col-2" th:text="${#temporals.format(event.getStartDate(), 'dd.MM.yyyy, HH:mm')}
+                                                        + ' - ' + ${#temporals.format(event.getEndDate(), 'dd.MM.yyyy, HH:mm')}">
 
                                 </div>
                             </li>
@@ -235,7 +238,7 @@
                         </ul>
                     </div>
                     <div class="events grid-events" th:if="${#lists.isEmpty(events)}">
-                        No active events
+                        No active events <a th:href="@{/events/all}" class="btn btn-green">All</a>
                     </div>
                 </section>
             </main>

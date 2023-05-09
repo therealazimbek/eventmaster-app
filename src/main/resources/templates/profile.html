@@ -36,6 +36,64 @@
   </header>
   <main class="no-bg user-home">
     <h1>Welcome back, <span th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></span></h1>
+    <section class="event-section">
+      <div class="events">
+        <ul class="responsive-table" th:object="${user}">
+          <li class="table-row">
+            <div class="col col-1">Firstname</div>
+            <div class="col col-2" th:text="${user.getFirstName()}">
+
+            </div>
+          </li>
+          <li class="table-row">
+            <div class="col col-1">Lastname</div>
+            <div class="col col-2" th:text="${user.getLastName()}">
+
+            </div>
+          </li>
+          <li class="table-row">
+            <div class="col col-1">Description</div>
+            <div class="col col-2" th:text="${user.getAdditionalInfo()}">
+
+            </div>
+          </li>
+          <li class="table-row">
+            <div class="col col-1">Birthday</div>
+            <div class="col col-2" th:text="${#temporals.format(user.getBirthday(), 'dd.MM.yyyy, HH:mm')}">
+
+            </div>
+          </li>
+          <li class="table-row">
+            <div class="col col-1">City</div>
+            <div class="col col-2" th:text="${user.getCity()}">
+
+            </div>
+          </li>
+
+          <li class="table-row">
+            <div class="col col-1">Email</div>
+            <div class="col col-2" th:text="${user.getEmail()}"></div>
+          </li>
+          <li class="table-row">
+            <div class="col col-1">Phone</div>
+            <div class="col col-2" th:text="${user.getPhone()}"></div>
+          </li>
+          <li class="table-row">
+            <div class="col col-1">Actions</div>
+            <div class="col col-2 actions">
+              <a th:href="@{/users/{id}/edit(id=${user.getId()})}" class="btn btn-action-orange"
+              >Edit</a
+              >
+              <a
+                      href="javascript:alert('Are you sere?')"
+                      class="btn btn-action-red"
+              >Delete</a
+              >
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
 <!--    <div class="cards">-->
 <!--      <div class="card">-->
 <!--        <h3>-->
