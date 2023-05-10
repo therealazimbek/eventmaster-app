@@ -375,7 +375,7 @@ input:focus {
     bottom: 150px;
 }
 
-.modal {
+.modal, .buyModal, .addGuestModal {
     display: none;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -397,7 +397,7 @@ input:focus {
     border-radius: 10px;
 }
 
-.modal > form {
+.modal > form, .buyModal > form, .addGuestModal > form {
     width: 100%;
     background-color: white;
     padding: 20px;

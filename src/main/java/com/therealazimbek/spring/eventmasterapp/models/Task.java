@@ -1,5 +1,6 @@
 package com.therealazimbek.spring.eventmasterapp.models;
 
+import com.therealazimbek.spring.eventmasterapp.validators.DateTimeConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,6 +25,7 @@ public class Task {
     private String description;
 
     @NotNull(message = "Specify due date")
+    @DateTimeConstraint
     private LocalDateTime due;
 
     private TaskStatus taskStatus;

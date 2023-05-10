@@ -43,6 +43,60 @@
                 </form>
 
         </div>
+        <div class="addGuestModal">
+
+
+                <form th:method="put" th:action="@{/events/{id}/addGuest(id=${event.getId()})}" class="form" th:object="${event}">
+                    <div class="input-area">
+                        <select name="guest" id="guest" multiple th:field="*{eventUsers}">
+                            <option th:each="availableUser: ${availableUsers}" th:value="${availableUser.getUserEventId()}" th:text="${availableUser.getUser().getFirstName()} + ' ' + ${availableUser.getUser().getLastName()}">
+
+                            </option>
+                        </select>
+                    </div>
+                    <div class="input-area">
+                        <input
+                                type="submit"
+                                name="submit"
+                                value="Add"
+                                class="btn btn-green"
+                        />
+
+                    </div>
+                    <div>
+                        <a href="javascript:close();" class="btn">Close</a>
+                        <a th:href="@{/vendors/create}" class="btn">Add a new vendor</a>
+                    </div>
+
+                </form>
+
+        </div>
+        <div class="buyModal">
+            <form method="POST" th:action="@{/events/{event_id}/buy(event_id=${event.getId()})}" class="form" th:object="${userPaymentCard}">
+                    <div class="input-area">
+                        <select name="card" id="card">
+                            <option th:each="userPaymentCard: ${userPaymentCards}" th:value="${userPaymentCard}" th:text="${userPaymentCard.getId()}">
+
+                            </option>
+                        </select>
+                    </div>
+                    <div class="input-area">
+                        <input
+                                type="submit"
+                                name="submit"
+                                value="Buy and join"
+                                class="btn btn-green"
+                        />
+
+                    </div>
+                    <div>
+                        <a href="javascript:closeBuyForm();" class="btn">Close</a>
+                        <a th:href="@{/profile/addCard}" class="btn">Add a new card</a>
+                    </div>
+
+                </form>
+
+        </div>
         <div class="container">
             <header>
                 <div class="logo"><a th:href="@{/}">EventMaster</a></div>
@@ -139,11 +193,15 @@
                             <li class="table-row">
                                 <div class="col col-1">Actions</div>
                                 <div class="col col-2 actions">
-                                    <form th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)}" th:action="@{/events/{id}/join(id=${event.getId()})}" th:method="put">
+                                    <form th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)
+                                                    and event.getPrice().intValue() <= 0}" th:action="@{/events/{id}/join(id=${event.getId()})}" th:method="put">
                                         <button type="submit" class="btn btn-green">Join</button>
                                     </form>
+                                    <a href="javascript:buyForm()" class="btn btn-green"
+                                       th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)
+                                                    and event.getPrice().intValue() > 0}">Buy</a>
                                     <form th:if="${event.user.username != user.username and userJoinedEvents.contains(event)}" th:action="@{/events/{id}/leave(id=${event.getId()})}" th:method="put">
-                                        <button type="submit" class="btn    ">Leave</button>
+                                        <button type="submit" class="btn btn-action-red">Leave</button>
                                     </form>
                                     <a th:href="@{/events/{id}/edit(id=${event.getId()})}" class="btn btn-action-orange"
                                        th:if="${event.user.username == user.username}"
@@ -155,12 +213,15 @@
                                         th:if="${event.user.username == user.username}"
                                         >Add vendor</a
                                     >
-                                    <a
-                                        href="javascript:alert('Are you sere?')"
-                                        class="btn btn-action-red"
-                                        th:if="${event.user.username == user.username}"
-                                        >Delete</a
-                                    >
+<!--                                    <a-->
+<!--                                            href="javascript:addGuests();"-->
+<!--                                            class="btn btn-action-orange"-->
+<!--                                            th:if="${event.user.username == user.username}"-->
+<!--                                    >Add guests</a-->
+<!--                                    >-->
+                                    <form th:if="${event.user.username == user.username}" th:action="@{/events/{id}/delete(id=${event.getId()})}" th:method="delete">
+                                        <button type="submit" class="btn btn-action-red">Delete</button>
+                                    </form>
                                 </div>
                             </li>
                         </ul>

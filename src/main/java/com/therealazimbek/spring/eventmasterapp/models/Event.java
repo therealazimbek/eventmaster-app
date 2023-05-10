@@ -1,5 +1,6 @@
 package com.therealazimbek.spring.eventmasterapp.models;
 
+import com.therealazimbek.spring.eventmasterapp.validators.DateTimeConstraint;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -48,9 +49,11 @@ public class Event {
     private String topic;
 
     @NotNull(message = "Specify start date time")
+    @DateTimeConstraint
     private LocalDateTime startDate;
 
-    @NotNull(message = "Specify end date time")
+    @NotNull(message = "Specify end date time and make sure it is after start date time")
+    @DateTimeConstraint
     private LocalDateTime endDate;
 
     private String description;

@@ -46,7 +46,7 @@ public class RegistrationForm {
     private String city;
 
     @NotNull(message = "Birthday is required")
-    @Past
+    @Past(message="date of birth must be less than today")
     private LocalDate birthday;
 
     public User toUser(PasswordEncoder passwordEncoder) {

@@ -4,10 +4,15 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
-@Data
 @Entity
+@Setter
+@Getter
+@NoArgsConstructor
 public class UserPaymentCard {
 
     @Id

@@ -2,6 +2,7 @@ package com.therealazimbek.spring.eventmasterapp.services;
 
 import com.therealazimbek.spring.eventmasterapp.models.Event;
 import com.therealazimbek.spring.eventmasterapp.models.User;
+import com.therealazimbek.spring.eventmasterapp.models.UserEvent;
 import com.therealazimbek.spring.eventmasterapp.repositories.EventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,13 @@ public class UserService {
                 event -> LocalDateTime.now().isBefore(event.getEndDate()) ||
                         LocalDateTime.now().isEqual(event.getStartDate())
         ).collect(Collectors.toList());
+    }
+
+    public List<User> findAvailableUsersToAdd(User user, Event event) {
+        List<User> existingGuest = event.getEventUsers().stream().map(UserEvent::getUser).toList();
+        List<User> availableUsers = findAll();
+        availableUsers.removeAll(existingGuest);
+        return availableUsers;
     }
 
     public void save(User user) {

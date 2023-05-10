@@ -2,14 +2,24 @@ package com.therealazimbek.spring.eventmasterapp.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "orders")
+@NoArgsConstructor
 public class Order {
+
+    public Order(BigDecimal total, LocalDateTime date, User user, Event event) {
+        this.total = total;
+        this.date = date;
+        this.user = user;
+        this.event = event;
+    }
 
     @Id
     @GeneratedValue
@@ -17,7 +27,7 @@ public class Order {
 
     private BigDecimal total;
 
-    private LocalDate date;
+    private LocalDateTime date;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

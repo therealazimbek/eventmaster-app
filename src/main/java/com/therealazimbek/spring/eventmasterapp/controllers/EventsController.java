@@ -1,10 +1,7 @@
 package com.therealazimbek.spring.eventmasterapp.controllers;
 
 import com.therealazimbek.spring.eventmasterapp.models.*;
-import com.therealazimbek.spring.eventmasterapp.services.EventService;
-import com.therealazimbek.spring.eventmasterapp.services.UserService;
-import com.therealazimbek.spring.eventmasterapp.services.VendorService;
-import com.therealazimbek.spring.eventmasterapp.services.VenueService;
+import com.therealazimbek.spring.eventmasterapp.services.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Pattern;
 
 @Controller
@@ -35,12 +29,18 @@ public class EventsController {
 
     private final VenueService venueService;
 
+    private final OrderService orderService;
+
+    private final UserPaymentCardService userPaymentCardService;
+
     @Autowired
-    public EventsController(UserService userService, EventService eventService, VendorService vendorService, VenueService venueService) {
+    public EventsController(UserService userService, EventService eventService, VendorService vendorService, VenueService venueService, OrderService orderService, UserPaymentCardService userPaymentCardService) {
         this.eventService = eventService;
         this.userService = userService;
         this.vendorService = vendorService;
         this.venueService = venueService;
+        this.orderService = orderService;
+        this.userPaymentCardService = userPaymentCardService;
     }
 
     @ModelAttribute
@@ -70,6 +70,22 @@ public class EventsController {
     public void allEvents(Model model, Authentication authentication) {
         model.addAttribute("events",
                 eventService.findAllActiveEventsExceptUser(authentication.getName()).stream().limit(4).toList());
+    }
+
+    @ModelAttribute
+    public UserPaymentCard userPaymentCard() {
+        return new UserPaymentCard();
+    }
+
+    @ModelAttribute
+    public UserEvent userEvent() {
+        return new UserEvent();
+    }
+
+    @ModelAttribute
+    public void userPaymentCards(Model model, Authentication authentication) {
+        model.addAttribute("userPaymentCards",
+                userPaymentCardService.findAllByUserId(authentication.getName()).stream().limit(4).toList());
     }
 
     @GetMapping
@@ -108,6 +124,7 @@ public class EventsController {
         }
         User user = userService.findByUsername(authentication.getName());
         event.setUser(user);
+        event.setVendors(new ArrayList<>());
         eventService.save(event);
         return "redirect:/events";
     }
@@ -123,8 +140,16 @@ public class EventsController {
             if (UUID_REGEX.matcher(id).matches()) {
                 UUID uuid = UUID.fromString(id);
                 Event event = eventService.findById(uuid);
+                User user = userService.findByUsername(authentication.getName());
+
+                if(event.getIsPrivate() && event.getUser() != user && event.getEventUsers().stream().noneMatch(eventUser -> eventUser.getUser() == user)) {
+                    return "redirect:/notfound";
+                }
+
                 model.addAttribute("event", event);
-                model.addAttribute("user", userService.findByUsername(authentication.getName()));
+                model.addAttribute("user", user);
+                model.addAttribute("availableUsers", userService.findAvailableUsersToAdd(user, event).stream()
+                        .map(u -> new UserEvent(new UserEventId(u.getId(), event.getId()), UserRole.GUEST, u, event)).toList());
                 model.addAttribute("venue", event.getVenue());
                 model.addAttribute("vendors", event.getVendors());
                 model.addAttribute("allVendors", vendorService.findAll());
@@ -193,7 +218,6 @@ public class EventsController {
     public String addVendor(@PathVariable String id, Event event) {
         try {
             Event urlEvent = eventService.findById(UUID.fromString(id));
-            log.info(String.valueOf(event.getVendors().size()));
             List<Vendor> vendors = urlEvent.getVendors();
             HashSet<Vendor> hashSet = new HashSet<>(vendors);
             hashSet.addAll(event.getVendors());
@@ -205,6 +229,24 @@ public class EventsController {
             return "redirect:/notfound";
         }
     }
+
+//    @PutMapping("/{event_id}/addGuest")
+//    public String addGuest(@PathVariable String event_id, Event event) {
+//        try {
+//            Event urlEvent = eventService.findById(UUID.fromString(event_id));
+//            List<UserEvent> guests = urlEvent.getEventUsers();
+//            HashSet<UserEvent> hashSet = new HashSet<>(guests);
+//            log.info(event.toString());
+////            log.info(user.getUsername());
+////            hashSet.addAll(event.getVendors());
+////            urlEvent.setVendors(hashSet.stream().toList());
+////            eventService.save(urlEvent);
+//
+//            return "events";
+//        } catch (ResponseStatusException e) {
+//            return "redirect:/notfound";
+//        }
+//    }
 
     @PutMapping("/joinByCode")
     public String joinByCode(String code, Authentication authentication) {
@@ -228,6 +270,30 @@ public class EventsController {
                 return "redirect:/events/{id}";
             }
             return "redirect:/notfound";
+        } catch (ResponseStatusException e) {
+            return "redirect:/notfound";
+        }
+    }
+
+    @PostMapping("/{event_id}/buy")
+    public String buyEventAndAddGuest(@PathVariable String event_id, UserPaymentCard userPaymentCard,
+                                      Authentication authentication, Model model) {
+
+        try {
+            Event event = eventService.findById(UUID.fromString(event_id));
+            User user = userService.findByUsername(authentication.getName());
+            model.addAttribute("event", event);
+
+            if (event.getUser() != user && event.getMaxGuests().intValue() > event.getEventUsers().size()) {
+                Order order = new Order(event.getPrice(), LocalDateTime.now(), user, event);
+                userPaymentCard.setUser(user);
+                orderService.save(order);
+                eventService.addGuest(event, user, UserRole.GUEST);
+//                log.info(order.toString());
+//                log.info(userPaymentCard.toString());
+                return "redirect:/events/{event_id}";
+            }
+            return "redirect:/nopermission";
         } catch (ResponseStatusException e) {
             return "redirect:/notfound";
         }
