@@ -10,8 +10,10 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -57,6 +59,13 @@ public class UserService {
                 userEvent -> joinedEvents.add(userEvent.getEvent())
         );
         return joinedEvents;
+    }
+
+    public List<Event> findAllActiveUserEvents(User user) {
+        return user.getCreatedEvents().stream().filter(
+                event -> LocalDateTime.now().isBefore(event.getEndDate()) ||
+                        LocalDateTime.now().isEqual(event.getStartDate())
+        ).collect(Collectors.toList());
     }
 
     public void save(User user) {

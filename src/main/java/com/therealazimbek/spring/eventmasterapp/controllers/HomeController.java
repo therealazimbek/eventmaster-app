@@ -60,11 +60,7 @@ public class HomeController {
         User user = userService.findByUsername(authentication.getName());
         model.addAttribute("user", user);
         model.addAttribute("events",
-                eventService.findAll().stream().filter(
-                        event -> !event.getIsPrivate() && event.getUser() != user
-                                && (LocalDateTime.now().isBefore(event.getStartDate()) ||
-                                LocalDateTime.now().isEqual(event.getStartDate()))
-                ).limit(4).toList());
+                eventService.findAllActiveEventsExceptUser(user.getUsername()).stream().limit(4).toList());
         model.addAttribute("userEvents", user.getCreatedEvents().stream().filter(
                 event -> LocalDateTime.now().isBefore(event.getStartDate()) ||
                         LocalDateTime.now().isEqual(event.getStartDate())

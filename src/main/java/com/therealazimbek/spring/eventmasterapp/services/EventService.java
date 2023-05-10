@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class EventService {
@@ -86,6 +88,14 @@ public class EventService {
                     .findFirst().get();
             userEventRepository.delete(userEvent);
         }
+    }
+
+    public List<Event> findAllActiveEventsExceptUser(String username) {
+        return findAll().stream().filter(
+                event -> !event.getIsPrivate() && event.getUser() != userRepository.findByUsername(username)
+                        && (LocalDateTime.now().isBefore(event.getEndDate()) ||
+                        LocalDateTime.now().isEqual(event.getStartDate()))
+        ).collect(Collectors.toList());
     }
 
     public void delete(String id) {

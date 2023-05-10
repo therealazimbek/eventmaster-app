@@ -57,10 +57,7 @@ public class EventsController {
     @ModelAttribute
     public void userEvents(Model model, Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
-        model.addAttribute("userEvents",user.getCreatedEvents().stream().filter(
-                event -> LocalDateTime.now().isBefore(event.getEndDate()    ) ||
-                        LocalDateTime.now().isEqual(event.getStartDate())
-        ).limit(4).toList());
+        model.addAttribute("userEvents",userService.findAllActiveUserEvents(user).stream().limit(4).toList());
     }
 
     @ModelAttribute
@@ -72,11 +69,7 @@ public class EventsController {
     @ModelAttribute
     public void allEvents(Model model, Authentication authentication) {
         model.addAttribute("events",
-                eventService.findAll().stream().filter(
-                        event -> !event.getIsPrivate() && event.getUser() != userService.findByUsername(authentication.getName())
-                                    && (LocalDateTime.now().isBefore(event.getEndDate()) ||
-                                        LocalDateTime.now().isEqual(event.getStartDate()))
-                ).limit(4).toList());
+                eventService.findAllActiveEventsExceptUser(authentication.getName()).stream().limit(4).toList());
     }
 
     @GetMapping
@@ -88,10 +81,7 @@ public class EventsController {
     public String eventsUser(Model model, Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
         model.addAttribute("user", user);
-        model.addAttribute("userEvents", user.getCreatedEvents().stream().filter(
-                event -> LocalDateTime.now().isBefore(event.getEndDate()) ||
-                        LocalDateTime.now().isEqual(event.getStartDate())
-        ).toList());
+        model.addAttribute("userEvents", userService.findAllActiveUserEvents(user));
         model.addAttribute("userPastEvents", user.getCreatedEvents().stream().filter(
                 event -> LocalDateTime.now().isAfter(event.getEndDate())
         ).toList());
@@ -101,11 +91,7 @@ public class EventsController {
     @GetMapping("/all")
     public String eventsAll(Model model, Authentication authentication) {
         model.addAttribute("allEvents",
-                eventService.findAll().stream().filter(
-                        event -> !event.getIsPrivate() && event.getUser() != userService.findByUsername(authentication.getName())
-                                && (LocalDateTime.now().isBefore(event.getEndDate()) ||
-                                LocalDateTime.now().isEqual(event.getStartDate()))
-                ).toList());
+                eventService.findAllActiveEventsExceptUser(authentication.getName()));
         return "allEvents";
     }
 
