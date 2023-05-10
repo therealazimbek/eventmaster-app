@@ -33,7 +33,7 @@ public class SecurityConfig {
         return http
                 .authorizeRequests()
                 .requestMatchers("/home", "/events", "/events/**", "/venues", "/venues/**", "/vendors", "/vendors/**",
-                        "/profile").hasRole("USER")
+                        "/profile", "/tasks", "/tasks/**").hasRole("USER")
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()

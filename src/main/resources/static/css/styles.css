@@ -251,6 +251,7 @@ input:focus {
 
 .event-main {
     flex-direction: column;
+    justify-content: flex-start;
 }
 
 .event-section {

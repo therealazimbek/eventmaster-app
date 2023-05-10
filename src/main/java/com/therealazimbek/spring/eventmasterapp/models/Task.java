@@ -2,6 +2,7 @@ package com.therealazimbek.spring.eventmasterapp.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -15,14 +16,14 @@ public class Task {
     private Long id;
 
     @NotBlank(message="Name is required")
-    @Size(min=10, message="Name must be at least 10 characters long")
+    @Size(min=4, message="Name must be at least 4 characters long")
     private String title;
 
     @NotBlank(message="Description is required")
     @Size(min=10, message="Description must be at least 10 characters long")
     private String description;
 
-    @NotBlank(message = "Specify due date")
+    @NotNull(message = "Specify due date")
     private LocalDateTime due;
 
     private TaskStatus taskStatus;

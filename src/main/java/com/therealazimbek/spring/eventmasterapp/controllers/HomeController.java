@@ -64,18 +64,18 @@ public class HomeController {
                         event -> !event.getIsPrivate() && event.getUser() != user
                                 && (LocalDateTime.now().isBefore(event.getStartDate()) ||
                                 LocalDateTime.now().isEqual(event.getStartDate()))
-                ).toList());
+                ).limit(4).toList());
         model.addAttribute("userEvents", user.getCreatedEvents().stream().filter(
                 event -> LocalDateTime.now().isBefore(event.getStartDate()) ||
                         LocalDateTime.now().isEqual(event.getStartDate())
-        ).toList());
+        ).limit(4).toList());
         model.addAttribute("userTasks", user.getTasks().stream().filter(
-                task -> LocalDateTime.now().isBefore(task.getDue()) ||
-                        LocalDateTime.now().isEqual(task.getDue())
-        ).toList());
-        model.addAttribute("userOrders", user.getOrders());
-        model.addAttribute("vendors", vendorService.findAll());
-        model.addAttribute("venues", venueService.findAll());
+                task -> (LocalDateTime.now().isBefore(task.getDue()) ||
+                        LocalDateTime.now().isEqual(task.getDue())) && task.getTaskStatus() != TaskStatus.COMPLETED
+        ).limit(4).toList());
+        model.addAttribute("userOrders", user.getOrders().stream().limit(4).toList());
+        model.addAttribute("vendors", vendorService.findAll().stream().limit(4).toList());
+        model.addAttribute("venues", venueService.findAll().stream().limit(4).toList());
         return "home";
     }
 }

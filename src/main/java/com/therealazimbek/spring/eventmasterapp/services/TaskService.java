@@ -1,6 +1,7 @@
 package com.therealazimbek.spring.eventmasterapp.services;
 
 import com.therealazimbek.spring.eventmasterapp.models.Task;
+import com.therealazimbek.spring.eventmasterapp.models.TaskStatus;
 import com.therealazimbek.spring.eventmasterapp.models.User;
 import com.therealazimbek.spring.eventmasterapp.repositories.TaskRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,19 @@ public class TaskService {
         return user.getTasks();
     }
 
+    public Task findById(Long id) {
+        return taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    public void delete(Long id) {
+        try {
+            taskRepository.deleteById(id);
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public void save(Task task) {
         try {
             taskRepository.save(task);
@@ -38,5 +52,20 @@ public class TaskService {
             log.error(exception.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public void update(Task task) {
+        try {
+            taskRepository.save(task);
+        } catch (Exception exception) {
+            log.error(exception.getMessage());
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public void complete(Long id) {
+        Task task = findById(id);
+        task.setTaskStatus(TaskStatus.COMPLETED);
+        update(task);
     }
 }
