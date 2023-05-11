@@ -39,7 +39,7 @@ public class TaskService {
 
     public void delete(Task task) {
         try {
-            taskRepository.delete(task);
+            taskRepository.deleteById(task.getId());
 //            taskRepository.deleteById(id);
         } catch (Exception exception) {
             log.error(exception.getMessage());

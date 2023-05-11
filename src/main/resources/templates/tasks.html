@@ -1,194 +1,197 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="icon" th:href="@{/images/favicon.ico}" />
-        <title>Tasks</title>
-        <script
-            src="https://kit.fontawesome.com/3ee52d1216.js"
-            crossorigin="anonymous"
-        ></script>
-    </head>
-    <body>
-    <div class="modal">
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" th:href="@{/css/styles.css}"/>
+	<link rel="icon" th:href="@{/images/favicon.ico}"/>
+	<title>Tasks</title>
+	<script
+			src="https://kit.fontawesome.com/3ee52d1216.js"
+			crossorigin="anonymous"
+	></script>
+</head>
+<body>
+<div class="modal">
 
-        <form th:method="put" th:action="@{/events/joinByCode}" class="form">
-            <input
-                    type="text"
-                    name="code"
-                    id="code"
-                    placeholder="Enter code"
-            />
-            <input
-                    type="submit"
-                    name="submit"
-                    value="Join"
-                    class="btn btn-green"
-            />
-        </form>
+	<form th:method="put" th:action="@{/events/joinByCode}" class="form">
+		<input
+				type="text"
+				name="code"
+				id="code"
+				placeholder="Enter code"
+		/>
+		<input
+				type="submit"
+				name="submit"
+				value="Join"
+				class="btn btn-green"
+		/>
+	</form>
 
-    </div>
-        <div class="container">
-            <header>
-                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
-                <nav class="nav">
-                    <a th:href="@{/home}">Home</a>
-                    <a th:href="@{/events}">Events</a>
-                    <a th:href="@{/features}">Features</a>
-                    <a th:href="@{/about}">About us</a>
-                </nav>
-                <div class="login-area">
-                    <div class="flex-row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="btn btn-green">Logout</button>
-                        </form>
-                        <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
-                        <a th:href="@{/profile}" class="btn">Profile</a>
+</div>
+<div class="container">
+	<header>
+		<div class="logo"><a th:href="@{/}">EventMaster</a></div>
+		<nav class="nav">
+			<a th:href="@{/home}">Home</a>
+			<a th:href="@{/events}">Events</a>
+			<a th:href="@{/features}">Features</a>
+			<a th:href="@{/about}">About us</a>
+		</nav>
+		<div class="login-area">
+			<div class="flex-row" sec:authorize="isAuthenticated()">
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="btn btn-green">Logout</button>
+				</form>
+				<!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+				<a th:href="@{/profile}" class="btn">Profile</a>
 
-                    </div>
-                    <div sec:authorize="isAnonymous()">
-                        <a th:href="@{/login}" class="btn btn-green">Login</a>
-                        <a th:href="@{/register}" class="btn">Register</a>
-                    </div>
-                </div>
-            </header>
-            <main class="event-main no-bg">
-                <section class="event-section">
-                    <h2 class="bg-h">Active tasks</h2>
-                    <a
-                        title="New event"
-                        class="btn fixed-btn"
-                        th:href="@{/tasks/create}"
-                        target="_blank"
-                        >Create a task</a
-                    >
+			</div>
+			<div sec:authorize="isAnonymous()">
+				<a th:href="@{/login}" class="btn btn-green">Login</a>
+				<a th:href="@{/register}" class="btn">Register</a>
+			</div>
+		</div>
+	</header>
+	<main class="event-main no-bg">
+		<section class="event-section">
+			<h2 class="bg-h">Active tasks</h2>
+			<a
+					title="New event"
+					class="btn fixed-btn"
+					th:href="@{/tasks/create}"
+					target="_blank"
+			>Create a task</a
+			>
 
-                    <div class="events grid-events" th:if="${not #lists.isEmpty(activeTasks)}">
-                        <ul class="responsive-table" th:each="task: ${activeTasks}">
-                            <li class="table-row">
-                                <div class="col col-1">Title</div>
-                                <div class="col col-2">
-                                    <a th:href="@{/tasks/{id}(id=${task.getId()})}"
-                                        th:text="${task.getTitle()}"></a>
-                                </div>
-                            </li>
+			<div class="events grid-events" th:if="${not #lists.isEmpty(activeTasks)}">
+				<ul class="responsive-table" th:each="task: ${activeTasks}">
+					<li class="table-row">
+						<div class="col col-1">Title</div>
+						<div class="col col-2">
+							<a th:href="@{/tasks/{id}(id=${task.getId()})}"
+							   th:text="${task.getTitle()}"></a>
+						</div>
+					</li>
 
-                            <li class="table-row">
-                                <div class="col col-1">Due Date</div>
-                                <div class="col col-2" th:text="${#temporals.format(task.getDue(), 'dd.MM.yyyy, HH:mm')}">
+					<li class="table-row">
+						<div class="col col-1">Due Date</div>
+						<div class="col col-2" th:text="${#temporals.format(task.getDue(), 'dd.MM.yyyy, HH:mm')}">
 
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Status</div>
-                                <div class="col col-2" th:text="${task.getTaskStatus()?.toString()}"></div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Urgency</div>
-                                <div class="col col-2" th:text="${task.getCategory()?.getTitle()}"></div>
-                            </li>
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Status</div>
+						<div class="col col-2" th:text="${task.getTaskStatus()?.toString()}"></div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Urgency</div>
+						<div class="col col-2" th:text="${task.getCategory()?.getTitle()}"></div>
+					</li>
 
-                            <li class="table-row">
-                                <div class="col col-1">Event</div>
-                                <div class="col col-2">
-                                    <a th:href="@{/events/{id}(id=${task.getEvent().getId()})}"
-                                        th:text="${task.getEvent().getName()}"></a>
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Actions</div>
-                                <div class="col col-2 actions">
-                                    <form th:if="${user == task.getUser()}" th:action="@{/tasks/{id}/complete(id=${task.getId()})}" th:method="put">
-                                        <button type="submit" class="btn btn-action-orange">Complete</button>
-                                    </form>
-                                    <a
-                                        th:if="${user == task.getUser()}"
-                                        th:href="@{/tasks/{id}/edit(id=${task.getId()})}"
-                                        class="btn btn-action-orange"
-                                        >Edit</a
-                                    >
-                                    <form th:if="${user == task.getUser()}" th:action="@{/tasks/{id}/delete(id=${task.getId()})}" th:method="delete">
-                                        <button type="submit" class="btn btn-action-red">Delete</button>
-                                    </form>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+					<li class="table-row">
+						<div class="col col-1">Event</div>
+						<div class="col col-2">
+							<a th:href="@{/events/{id}(id=${task.getEvent()?.getId()})}"
+							   th:text="${task.getEvent()?.getName()}"></a>
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Actions</div>
+						<div class="col col-2 actions">
+							<form th:if="${user == task.getUser()}"
+								  th:action="@{/tasks/{id}/complete(id=${task.getId()})}" th:method="put">
+								<button type="submit" class="btn btn-action-orange">Complete</button>
+							</form>
+							<a
+									th:if="${user == task.getUser()}"
+									th:href="@{/tasks/{id}/edit(id=${task.getId()})}"
+									class="btn btn-action-orange"
+							>Edit</a
+							>
+							<form th:if="${user == task.getUser()}"
+								  th:action="@{/tasks/{id}/delete(id=${task.getId()})}" th:method="delete">
+								<button type="submit" class="btn btn-action-red">Delete</button>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</div>
 
-                    <div class="events grid-events" th:if="${#lists.isEmpty(activeTasks)}">
-                        No active tasks
-                    </div>
-                </section>
+			<div class="events grid-events" th:if="${#lists.isEmpty(activeTasks)}">
+				No active tasks
+			</div>
+		</section>
 
-                <section class="event-section  user-events">
-                    <h2 class="bg-h">Past/Completed tasks</h2>
-                    <a
-                            title="New event"
-                            class="btn fixed-btn"
-                            th:href="@{/tasks/create}"
-                            target="_blank"
-                    >Create a task</a
-                    >
+		<section class="event-section  user-events">
+			<h2 class="bg-h">Past/Completed tasks</h2>
+			<a
+					title="New event"
+					class="btn fixed-btn"
+					th:href="@{/tasks/create}"
+					target="_blank"
+			>Create a task</a
+			>
 
-                    <div class="events grid-events" th:if="${not #lists.isEmpty(completedTasks)}">
-                        <ul class="responsive-table" th:each="task: ${completedTasks}">
-                            <li class="table-row">
-                                <div class="col col-1">Title</div>
-                                <div class="col col-2">
-                                    <a th:href="@{/tasks/{id}(id=${task.getId()})}"
-                                       th:text="${task.getTitle()}"></a>
-                                </div>
-                            </li>
+			<div class="events grid-events" th:if="${not #lists.isEmpty(completedTasks)}">
+				<ul class="responsive-table" th:each="task: ${completedTasks}">
+					<li class="table-row">
+						<div class="col col-1">Title</div>
+						<div class="col col-2">
+							<a th:href="@{/tasks/{id}(id=${task.getId()})}"
+							   th:text="${task.getTitle()}"></a>
+						</div>
+					</li>
 
-                            <li class="table-row">
-                                <div class="col col-1">Due Date</div>
-                                <div class="col col-2" th:text="${#temporals.format(task.getDue(), 'dd.MM.yyyy, HH:mm')}">
+					<li class="table-row">
+						<div class="col col-1">Due Date</div>
+						<div class="col col-2" th:text="${#temporals.format(task.getDue(), 'dd.MM.yyyy, HH:mm')}">
 
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Status</div>
-                                <div class="col col-2" th:text="${task.getTaskStatus()?.toString()}"></div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Urgency</div>
-                                <div class="col col-2" th:text="${task.getCategory()?.getTitle()}"></div>
-                            </li>
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Status</div>
+						<div class="col col-2" th:text="${task.getTaskStatus()?.toString()}"></div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Urgency</div>
+						<div class="col col-2" th:text="${task.getCategory()?.getTitle()}"></div>
+					</li>
 
-                            <li class="table-row">
-                                <div class="col col-1">Event</div>
-                                <div class="col col-2">
-                                    <a th:href="@{/events/{id}(id=${task.getEvent().getId()})}"
-                                       th:text="${task.getEvent().getName()}"></a>
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Actions</div>
-                                <div class="col col-2 actions">
-                                    <form th:if="${user == task.getUser()}" th:action="@{/tasks/{id}/delete(id=${task.getId()})}" th:method="delete">
-                                        <button type="submit" class="btn btn-action-red">Delete</button>
-                                    </form>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+					<li class="table-row">
+						<div class="col col-1">Event</div>
+						<div class="col col-2">
+							<a th:href="@{/events/{id}(id=${task.getEvent().getId()})}"
+							   th:text="${task.getEvent().getName()}"></a>
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Actions</div>
+						<div class="col col-2 actions">
+							<form th:if="${user == task.getUser()}"
+								  th:action="@{/tasks/{id}/delete(id=${task.getId()})}" th:method="delete">
+								<button type="submit" class="btn btn-action-red">Delete</button>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</div>
 
-                    <div class="events grid-events" th:if="${#lists.isEmpty(completedTasks)}">
-                        No past tasks
-                    </div>
-                </section>
-            </main>
-            <footer>
-                <p class="footer-text">
-                    &copy; 2023 EventMaster. All rights are reserved. With Love,
-                    Azimbek
-                </p>
-            </footer>
-        </div>
-    <script th:src="@{/js/app.js}"></script>
-    </body>
+			<div class="events grid-events" th:if="${#lists.isEmpty(completedTasks)}">
+				No past tasks
+			</div>
+		</section>
+	</main>
+	<footer>
+		<p class="footer-text">
+			&copy; 2023 EventMaster. All rights are reserved. With Love,
+			Azimbek
+		</p>
+	</footer>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
 </html>

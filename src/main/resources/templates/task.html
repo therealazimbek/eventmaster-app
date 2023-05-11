@@ -1,106 +1,109 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="icon" th:href="@{/images/favicon.ico}" />
-        <title>Task details</title>
-        <script
-            src="https://kit.fontawesome.com/3ee52d1216.js"
-            crossorigin="anonymous"
-        ></script>
-    </head>
-    <body>
-        <div class="container">
-            <header>
-                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
-                <nav class="nav">
-                    <a th:href="@{/home}">Home</a>
-                    <a th:href="@{/events}">Events</a>
-                    <a th:href="@{/features}">Features</a>
-                    <a th:href="@{/about}">About us</a>
-                </nav>
-                <div class="login-area">
-                    <div class="flex-row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="btn btn-green">Logout</button>
-                        </form>
-                        <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
-                        <a th:href="@{/profile}" class="btn">Profile</a>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" th:href="@{/css/styles.css}"/>
+	<link rel="icon" th:href="@{/images/favicon.ico}"/>
+	<title>Task details</title>
+	<script
+			src="https://kit.fontawesome.com/3ee52d1216.js"
+			crossorigin="anonymous"
+	></script>
+</head>
+<body>
+<div class="container">
+	<header>
+		<div class="logo"><a th:href="@{/}">EventMaster</a></div>
+		<nav class="nav">
+			<a th:href="@{/home}">Home</a>
+			<a th:href="@{/events}">Events</a>
+			<a th:href="@{/features}">Features</a>
+			<a th:href="@{/about}">About us</a>
+		</nav>
+		<div class="login-area">
+			<div class="flex-row" sec:authorize="isAuthenticated()">
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="btn btn-green">Logout</button>
+				</form>
+				<!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+				<a th:href="@{/profile}" class="btn">Profile</a>
 
-                    </div>
-                    <div sec:authorize="isAnonymous()">
-                        <a th:href="@{/login}" class="btn btn-green">Login</a>
-                        <a th:href="@{/register}" class="btn">Register</a>
-                    </div>
-                </div>
-            </header>
-            <main class="event-main no-bg">
-                <section class="event-section">
-                    <h2 class="bg-h">Task details</h2>
+			</div>
+			<div sec:authorize="isAnonymous()">
+				<a th:href="@{/login}" class="btn btn-green">Login</a>
+				<a th:href="@{/register}" class="btn">Register</a>
+			</div>
+		</div>
+	</header>
+	<main class="event-main no-bg">
+		<section class="event-section">
+			<h2 class="bg-h">Task details</h2>
 
-                    <div class="events">
-                        <ul class="responsive-table" th:object="${task}">
-                            <li class="table-row">
-                                <div class="col col-1">Title</div>
-                                <div class="col col-2" th:text="${task.getTitle()}"></div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Description</div>
-                                <div class="col col-2" th:text="${task.getDescription()}">
+			<div class="events">
+				<ul class="responsive-table" th:object="${task}">
+					<li class="table-row">
+						<div class="col col-1">Title</div>
+						<div class="col col-2" th:text="${task.getTitle()}"></div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Description</div>
+						<div class="col col-2" th:text="${task.getDescription()}">
 
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Due Date</div>
-                                <div class="col col-2" th:text="${#temporals.format(task.getDue(), 'dd.MM.yyyy, HH:mm')}">
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Status</div>
-                                <div class="col col-2" th:text="${task.getTaskStatus().toString()}"></div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Urgency</div>
-                                <div class="col col-2" th:text="${task.getCategory().getTitle()}"></div>
-                            </li>
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Due Date</div>
+						<div class="col col-2" th:text="${#temporals.format(task.getDue(), 'dd.MM.yyyy, HH:mm')}">
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Status</div>
+						<div class="col col-2" th:text="${task.getTaskStatus().toString()}"></div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Urgency</div>
+						<div class="col col-2" th:text="${task.getCategory().getTitle()}"></div>
+					</li>
 
-                            <li class="table-row">
-                                <div class="col col-1">Event</div>
-                                <div class="col col-2" >
-                                    <a th:href="@{/events/{id}(id=${task.getEvent().getId()})}" th:text="${task.getEvent().getName()}"></a>
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Actions</div>
-                                <div class="col col-2 actions">
-                                    <form th:if="${user == task.getUser()} and ${task.getTaskStatus().toString() != 'COMPLETED'}" th:action="@{/tasks/{id}/complete(id=${task.getId()})}" th:method="put">
-                                        <button type="submit" class="btn btn-action-orange">Complete</button>
-                                    </form>
-                                    <a
-                                            th:if="${user == task.getUser()}"
-                                            th:href="@{/tasks/{id}/edit(id=${task.getId()})}"
-                                            class="btn btn-action-orange"
-                                    >Edit</a
-                                    >
-                                    <form th:if="${user == task.getUser()}" th:action="@{/tasks/{id}/delete(id=${task.getId()})}" th:method="delete">
-                                        <button type="submit" class="btn btn-action-red">Delete</button>
-                                    </form>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-            </main>
-            <footer>
-                <p class="footer-text">
-                    &copy; 2023 EventMaster. All rights are reserved. With Love,
-                    Azimbek
-                </p>
-            </footer>
-        </div>
-    </body>
+					<li class="table-row">
+						<div class="col col-1">Event</div>
+						<div class="col col-2">
+							<a th:href="@{/events/{id}(id=${task.getEvent()?.getId()})}"
+							   th:text="${task.getEvent()?.getName()}"></a>
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-1">Actions</div>
+						<div class="col col-2 actions">
+							<form th:if="${user == task.getUser()} and ${task.getTaskStatus().toString() != 'COMPLETED'}"
+								  th:action="@{/tasks/{id}/complete(id=${task.getId()})}" th:method="put">
+								<button type="submit" class="btn btn-action-orange">Complete</button>
+							</form>
+							<a
+									th:if="${user == task.getUser()}"
+									th:href="@{/tasks/{id}/edit(id=${task.getId()})}"
+									class="btn btn-action-orange"
+							>Edit</a
+							>
+							<form th:if="${user == task.getUser()}"
+								  th:action="@{/tasks/{id}/delete(id=${task.getId()})}" th:method="delete">
+								<button type="submit" class="btn btn-action-red">Delete</button>
+							</form>
+						</div>
+					</li>
+				</ul>
+			</div>
+		</section>
+	</main>
+	<footer>
+		<p class="footer-text">
+			&copy; 2023 EventMaster. All rights are reserved. With Love,
+			Azimbek
+		</p>
+	</footer>
+</div>
+</body>
 </html>

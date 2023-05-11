@@ -12,7 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -183,11 +186,6 @@ public class EventsController {
         if (event.isPresent() && user.isPresent()) {
             if (Objects.equals(event.get().getUser().getUsername(), authentication.getName())) {
                 userEventService.delete(user.get(), event.get());
-                event.get().setVendors(new ArrayList<>());
-                event.get().getOrders().forEach(order -> order.setEvent(null));
-                event.get().getTasks().forEach(task -> task.setEvent(null));
-                event.get().setVenue(null);
-                event.get().setUser(null);
                 eventService.delete(event.get());
                 return "redirect:/events";
             } else {

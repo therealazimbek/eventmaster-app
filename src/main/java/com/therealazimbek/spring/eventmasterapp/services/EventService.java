@@ -2,12 +2,14 @@ package com.therealazimbek.spring.eventmasterapp.services;
 
 import com.therealazimbek.spring.eventmasterapp.models.*;
 import com.therealazimbek.spring.eventmasterapp.repositories.EventRepository;
+import com.therealazimbek.spring.eventmasterapp.repositories.TaskRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserEventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,11 +24,14 @@ public class EventService {
 
     private final UserEventRepository userEventRepository;
 
+    private final TaskRepository taskRepository;
+
     @Autowired
-    public EventService(UserRepository userRepository, EventRepository eventRepository, UserEventRepository userEventRepository) {
+    public EventService(UserRepository userRepository, EventRepository eventRepository, UserEventRepository userEventRepository, TaskRepository taskRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.userEventRepository = userEventRepository;
+        this.taskRepository = taskRepository;
     }
 
     public List<Event> findAll() {
@@ -88,6 +93,11 @@ public class EventService {
     }
 
     public void delete(Event event) {
-        eventRepository.delete(event);
+        event.setVendors(new ArrayList<>());
+        event.getOrders().forEach(order -> order.setEvent(null));
+        event.getTasks().forEach(task -> taskRepository.deleteById(task.getId()));
+        event.setVenue(null);
+        event.setUser(null);
+        eventRepository.deleteById(event.getId());
     }
 }

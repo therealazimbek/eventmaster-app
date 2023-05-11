@@ -3,6 +3,9 @@ package com.therealazimbek.spring.eventmasterapp.services;
 import com.therealazimbek.spring.eventmasterapp.models.Event;
 import com.therealazimbek.spring.eventmasterapp.models.User;
 import com.therealazimbek.spring.eventmasterapp.models.UserEvent;
+import com.therealazimbek.spring.eventmasterapp.repositories.OrderRepository;
+import com.therealazimbek.spring.eventmasterapp.repositories.TaskRepository;
+import com.therealazimbek.spring.eventmasterapp.repositories.UserEventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +21,21 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final UserEventRepository userEventRepository;
+
+    private final TaskRepository taskRepository;
+
+    private final OrderRepository orderRepository;
+
+    private final EventService eventService;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserEventRepository userEventRepository, TaskRepository taskRepository, OrderRepository orderRepository, EventService eventService) {
         this.userRepository = userRepository;
+        this.userEventRepository = userEventRepository;
+        this.taskRepository = taskRepository;
+        this.orderRepository = orderRepository;
+        this.eventService = eventService;
     }
 
     public List<User> findAll() {
@@ -74,5 +89,12 @@ public class UserService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public void delete(User user) {
+        user.getCreatedEvents().forEach(eventService::delete);
+        orderRepository.deleteAll(user.getOrders());
+        taskRepository.deleteAll(user.getTasks());
+        userRepository.deleteById(user.getId());
     }
 }
