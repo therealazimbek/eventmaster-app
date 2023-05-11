@@ -1,7 +1,6 @@
 package com.therealazimbek.spring.eventmasterapp.models;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,7 +26,7 @@ public class UserEvent {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @MapsId("eventId")
     @JoinColumn(name = "event_id")
     private Event event;

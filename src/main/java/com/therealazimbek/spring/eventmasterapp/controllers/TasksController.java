@@ -75,10 +75,15 @@ public class TasksController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid Task task, BindingResult bindingResult, Authentication authentication) {
+    public String create(@Valid Task task, BindingResult bindingResult, Authentication authentication, Model model) {
         Optional<User> user = userService.findByUsername(authentication.getName());
         if (user.isPresent()) {
             if (bindingResult.hasErrors()) {
+                return "createTask";
+            }
+            if (task.getDue().isBefore(task.getEvent().getStartDate()) ||
+                    task.getDue().isAfter(task.getEvent().getEndDate())) {
+                model.addAttribute("dateError", "Due date should be between chosen event dates");
                 return "createTask";
             }
             task.setUser(user.get());
@@ -136,7 +141,10 @@ public class TasksController {
         Optional<Task> task = taskService.findById(Long.valueOf(id));
         if (task.isPresent()) {
             if (Objects.equals(task.get().getUser().getUsername(), authentication.getName())) {
-                taskService.delete(Long.valueOf(id));
+//                task.get().setUser(null);
+//                task.get().setEvent(null);
+//                task.get().setCategory(null);
+                taskService.delete(task.get());
                 return "redirect:/tasks";
             } else {
                 return "redirect:/nopermission";

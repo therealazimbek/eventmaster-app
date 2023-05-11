@@ -16,12 +16,13 @@ public class Task {
     @GeneratedValue
     private Long id;
 
-    @NotBlank(message="Name is required")
-    @Size(min=4, message="Name must be at least 4 characters long")
+    @NotBlank(message = "Name is required")
+    @Size(min = 4, message = "Name must be at least 4 characters long")
     private String title;
 
-    @NotBlank(message="Description is required")
-    @Size(min=10, message="Description must be at least 10 characters long")
+    @NotBlank(message = "Description is required")
+    @Size(min = 10, message = "Description must be at least 10 characters long")
+    @Size(max = 3000, message = "Topic must be at most 3000 characters long")
     private String description;
 
     @NotNull(message = "Specify due date")

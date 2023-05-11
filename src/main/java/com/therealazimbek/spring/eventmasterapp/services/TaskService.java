@@ -37,9 +37,10 @@ public class TaskService {
         return taskRepository.findById(id);
     }
 
-    public void delete(Long id) {
+    public void delete(Task task) {
         try {
-            taskRepository.deleteById(id);
+            taskRepository.delete(task);
+//            taskRepository.deleteById(id);
         } catch (Exception exception) {
             log.error(exception.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);

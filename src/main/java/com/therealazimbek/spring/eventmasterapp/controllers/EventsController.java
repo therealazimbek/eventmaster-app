@@ -33,14 +33,17 @@ public class EventsController {
 
     private final UserPaymentCardService userPaymentCardService;
 
+    private final UserEventService userEventService;
+
     @Autowired
-    public EventsController(UserService userService, EventService eventService, VendorService vendorService, VenueService venueService, OrderService orderService, UserPaymentCardService userPaymentCardService) {
+    public EventsController(UserService userService, EventService eventService, VendorService vendorService, VenueService venueService, OrderService orderService, UserPaymentCardService userPaymentCardService, UserEventService userEventService) {
         this.eventService = eventService;
         this.userService = userService;
         this.vendorService = vendorService;
         this.venueService = venueService;
         this.orderService = orderService;
         this.userPaymentCardService = userPaymentCardService;
+        this.userEventService = userEventService;
     }
 
     @ModelAttribute
@@ -77,6 +80,7 @@ public class EventsController {
             model.addAttribute("allEvents",
                     eventService.findAllActiveEventsExceptUser(authentication.getName()));
             model.addAttribute("venues", venueService.findAll());
+            model.addAttribute("allVendors", vendorService.findAll());
         }
     }
 
@@ -109,14 +113,21 @@ public class EventsController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid Event event, BindingResult bindingResult, Authentication authentication) {
+    public String create(@Valid Event event, Model model, BindingResult bindingResult, Authentication authentication) {
         if (bindingResult.hasErrors()) {
             return "/createEvent";
         }
         Optional<User> user = userService.findByUsername(authentication.getName());
         if (user.isPresent()) {
+
+            if (!LocalDateTime.now().isBefore(event.getStartDate()) ||
+                    event.getEndDate().isBefore(event.getStartDate())) {
+                model.addAttribute("endDateError", "Start date should be before end date");
+                model.addAttribute("startDateError", "Start date should not be past date");
+                return "/createEvent";
+            }
+
             event.setUser(user.get());
-            event.setVendors(new ArrayList<>());
             eventService.save(event);
             return "redirect:/events";
         }
@@ -168,8 +179,15 @@ public class EventsController {
     @DeleteMapping("/{id}/delete")
     public String delete(@PathVariable String id, Authentication authentication) {
         Optional<Event> event = eventService.findById(UUID.fromString(id));
-        if (event.isPresent()) {
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (event.isPresent() && user.isPresent()) {
             if (Objects.equals(event.get().getUser().getUsername(), authentication.getName())) {
+                userEventService.delete(user.get(), event.get());
+                event.get().setVendors(new ArrayList<>());
+                event.get().getOrders().forEach(order -> order.setEvent(null));
+                event.get().getTasks().forEach(task -> task.setEvent(null));
+                event.get().setVenue(null);
+                event.get().setUser(null);
                 eventService.delete(event.get());
                 return "redirect:/events";
             } else {
@@ -242,7 +260,7 @@ public class EventsController {
         Optional<Event> event = eventService.findById(UUID.fromString(id));
         Optional<User> user = userService.findByUsername(authentication.getName());
         if (event.isPresent() && user.isPresent()) {
-            if (event.get().getUser() != user.get() && event.get().getMaxGuests().intValue() > event.get().getEventUsers().size()) {
+            if (event.get().getUser() != user.get()) {
                 eventService.addGuest(event.get(), user.get(), UserRole.GUEST);
                 return "redirect:/events";
             }

@@ -1,134 +1,138 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="icon" th:href="@{/images/favicon.ico}" />
-        <title>New task</title>
-        <script
-            src="https://kit.fontawesome.com/3ee52d1216.js"
-            crossorigin="anonymous"
-        ></script>
-    </head>
-    <body>
-        <div class="container">
-            <header>
-                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
-                <nav class="nav">
-                    <a th:href="@{/home}">Home</a>
-                    <a th:href="@{/events}">Events</a>
-                    <a th:href="@{/features}">Features</a>
-                    <a th:href="@{/about}">About us</a>
-                </nav>
-                <div class="login-area">
-                    <div class="flex-row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="btn btn-green">Logout</button>
-                        </form>
-                        <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
-                        <a th:href="@{/profile}" class="btn">Profile</a>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" th:href="@{/css/styles.css}"/>
+	<link rel="icon" th:href="@{/images/favicon.ico}"/>
+	<title>New task</title>
+	<script
+			src="https://kit.fontawesome.com/3ee52d1216.js"
+			crossorigin="anonymous"
+	></script>
+</head>
+<body>
+<div class="container">
+	<header>
+		<div class="logo"><a th:href="@{/}">EventMaster</a></div>
+		<nav class="nav">
+			<a th:href="@{/home}">Home</a>
+			<a th:href="@{/events}">Events</a>
+			<a th:href="@{/features}">Features</a>
+			<a th:href="@{/about}">About us</a>
+		</nav>
+		<div class="login-area">
+			<div class="flex-row" sec:authorize="isAuthenticated()">
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="btn btn-green">Logout</button>
+				</form>
+				<!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+				<a th:href="@{/profile}" class="btn">Profile</a>
 
-                    </div>
-                    <div sec:authorize="isAnonymous()">
-                        <a th:href="@{/login}" class="btn btn-green">Login</a>
-                        <a th:href="@{/register}" class="btn">Register</a>
-                    </div>
-                </div>
-            </header>
-            <main class="event-main no-bg">
-                <section class="event-section">
-                    <h2 class="bg-h">Create a new task</h2>
-                    <div class="event-create-form">
-                        <form method="POST" th:action="@{/tasks/create}" class="form" th:object="${task}">
-                            <div class="input-area">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    id="title"
-                                    placeholder="Title"
-                                    th:field="*{title}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('title')}"
-                                      th:errors="*{title}"></span>
-                            </div>
+			</div>
+			<div sec:authorize="isAnonymous()">
+				<a th:href="@{/login}" class="btn btn-green">Login</a>
+				<a th:href="@{/register}" class="btn">Register</a>
+			</div>
+		</div>
+	</header>
+	<main class="event-main no-bg">
+		<section class="event-section">
+			<h2 class="bg-h">Create a new task</h2>
+			<div class="event-create-form">
+				<form method="POST" th:action="@{/tasks/create}" class="form" th:object="${task}">
+					<div class="input-area">
+						<input
+								type="text"
+								name="title"
+								id="title"
+								placeholder="Title"
+								th:field="*{title}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('title')}"
+							  th:errors="*{title}"></span>
+					</div>
 
-                            <div class="input-area">
-                                <input
-                                    type="text"
-                                    name="due"
-                                    id="due"
-                                    placeholder="Due datetime: DD/MM/YYYY, HH:MM"
-                                    onfocus="(this.type='datetime-local')"
-                                    th:field="*{due}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('due')}"
-                                      th:errors="*{due}"></span>
-                            </div>
-                            <div class="input-area">
-                                <select name="category" id="category">
-                                    <option th:each="category: ${categories}" th:value="${category.getId()}" th:text="${category.getTitle()}">
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="input-area">
-                                <select name="status" id="status" th:field="*{taskStatus}">
-                                    <option th:each="colorOpt : ${T(com.therealazimbek.spring.eventmasterapp.models.TaskStatus).values()}"
-                                            th:value="${colorOpt}" th:text="${colorOpt}"></option>
-                                </select>
-                            </div>
-                            <div class="input-area">
-                                <select name="event" id="event_id">
-                                    <option th:each="event: ${events}" th:value="${event.getId()}" th:text="${event.getName()}">
-                                    </option>
-                                </select>
-                            </div>
-<!--                            <div class="input-area">-->
-<!--                                <select name="user" id="user_id">-->
-<!--                                    <option value="" disabled selected>-->
-<!--                                        Select a user to assign-->
-<!--                                    </option>-->
-<!--                                    <option value="1">User #1</option>-->
-<!--                                    <option value="2">User #2</option>-->
-<!--                                    <option value="3">User #3</option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-                            <div class="input-area">
+					<div class="input-area">
+						<input
+								type="text"
+								name="due"
+								id="due"
+								placeholder="Due datetime: DD/MM/YYYY, HH:MM"
+								onfocus="(this.type='datetime-local')"
+								th:field="*{due}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('due')}"
+							  th:errors="*{due}"></span>
+						<span class="validationError"
+							  th:if="${dateError}"
+							  th:text="${dateError}"></span>
+					</div>
+					<div class="input-area">
+						<select name="category" id="category">
+							<option th:each="category: ${categories}" th:value="${category.getId()}"
+									th:text="${category.getTitle()}">
+							</option>
+						</select>
+					</div>
+					<div class="input-area">
+						<select name="status" id="status" th:field="*{taskStatus}">
+							<option th:each="colorOpt : ${T(com.therealazimbek.spring.eventmasterapp.models.TaskStatus).values()}"
+									th:value="${colorOpt}" th:text="${colorOpt}"></option>
+						</select>
+					</div>
+					<div class="input-area">
+						<select name="event" id="event_id">
+							<option th:each="event: ${events}" th:value="${event.getId()}" th:text="${event.getName()}">
+							</option>
+						</select>
+					</div>
+					<!--                            <div class="input-area">-->
+					<!--                                <select name="user" id="user_id">-->
+					<!--                                    <option value="" disabled selected>-->
+					<!--                                        Select a user to assign-->
+					<!--                                    </option>-->
+					<!--                                    <option value="1">User #1</option>-->
+					<!--                                    <option value="2">User #2</option>-->
+					<!--                                    <option value="3">User #3</option>-->
+					<!--                                </select>-->
+					<!--                            </div>-->
+					<div class="input-area">
                                 <textarea
-                                    type="text"
-                                    name="description"
-                                    id="description"
-                                    placeholder="Description"
-                                    th:field="*{description}"
-                                ></textarea>
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('description')}"
-                                      th:errors="*{description}"></span>
-                            </div>
+										type="text"
+										name="description"
+										id="description"
+										placeholder="Description"
+										th:field="*{description}"
+								></textarea>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('description')}"
+							  th:errors="*{description}"></span>
+					</div>
 
-                            <div class="input-area">
-                                <input
-                                    type="submit"
-                                    name="submit"
-                                    id="submit"
-                                    value="Create"
-                                    class="btn btn-green"
-                                />
-                            </div>
-                        </form>
-                    </div>
-                </section>
-            </main>
-            <footer>
-                <p class="footer-text">
-                    &copy; 2023 EventMaster. All rights are reserved. With Love,
-                    Azimbek
-                </p>
-            </footer>
-        </div>
-    </body>
+					<div class="input-area">
+						<input
+								type="submit"
+								name="submit"
+								id="submit"
+								value="Create"
+								class="btn btn-green"
+						/>
+					</div>
+				</form>
+			</div>
+		</section>
+	</main>
+	<footer>
+		<p class="footer-text">
+			&copy; 2023 EventMaster. All rights are reserved. With Love,
+			Azimbek
+		</p>
+	</footer>
+</div>
+</body>
 </html>

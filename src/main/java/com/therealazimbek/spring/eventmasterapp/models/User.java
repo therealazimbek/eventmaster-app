@@ -1,8 +1,10 @@
 package com.therealazimbek.spring.eventmasterapp.models;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
-import lombok.*;
+import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,6 +45,7 @@ public class User implements UserDetails {
 
     private String city;
 
+    @Size(max = 3000, message = "Topic must be at most 3000 characters long")
     private String additionalInfo;
 
     private LocalDate birthday;

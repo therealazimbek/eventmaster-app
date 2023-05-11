@@ -2,11 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="icon" th:href="@{/images/favicon.ico}" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="icon" th:href="@{/images/favicon.ico}"/>
     <title>Events</title>
     <script
             src="https://kit.fontawesome.com/3ee52d1216.js"
@@ -16,20 +16,20 @@
 <body>
 <div class="modal">
 
-        <form th:method="put" th:action="@{/events/joinByCode}" class="form">
-            <input
-                    type="text"
-                    name="code"
-                    id="code"
-                    placeholder="Enter code"
-            />
-            <input
-                    type="submit"
-                    name="submit"
-                    value="Join"
-                    class="btn btn-green"
-            />
-        </form>
+    <form th:method="put" th:action="@{/events/joinByCode}" class="form">
+        <input
+                type="text"
+                name="code"
+                id="code"
+                placeholder="Enter code"
+        />
+        <input
+                type="submit"
+                name="submit"
+                value="Join"
+                class="btn btn-green"
+        />
+    </form>
 
 </div>
 <div class="container">
@@ -100,17 +100,22 @@
                     </li>
                     <li class="table-row">
                         <div class="col col-1">Members</div>
-                        <div class="col col-2" th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
+                        <div class="col col-2"
+                             th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
                     </li>
 
                     <li class="table-row">
                         <div class="col col-1">Price</div>
-                        <div class="col col-2" th:text="${userEvent.getPrice()}"></div>
+                        <div class="col col-2" th:if="${userEvent.getPrice().intValue() == 0}"
+                        >Free
+                        </div>
+                        <div class="col col-2" th:if="${userEvent.getPrice().intValue() != 0}"
+                             th:text="${#numbers.formatCurrency(userEvent.getPrice())}"></div>
                     </li>
-
                     <li class="table-row">
-                        <div class="col col-1">Private</div>
-                        <div class="col col-2" th:text="${userEvent.getIsPrivate()}"></div>
+                        <div class="col col-1">Privacy</div>
+                        <div class="col col-2" th:if="${userEvent.getIsPrivate()}">Private</div>
+                        <div class="col col-2" th:if="${not userEvent.getIsPrivate()}">Public</div>
                     </li>
                     <li class="table-row">
                         <div class="col col-1">Actions</div>
@@ -163,17 +168,23 @@
                     </li>
                     <li class="table-row">
                         <div class="col col-1">Members</div>
-                        <div class="col col-2" th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
+                        <div class="col col-2"
+                             th:text="${userEvent.getEventUsers().size()} + '/' + ${userEvent.getMaxGuests()}"></div>
                     </li>
 
                     <li class="table-row">
                         <div class="col col-1">Price</div>
-                        <div class="col col-2" th:text="${userEvent.getPrice()}"></div>
+                        <div class="col col-2" th:if="${userEvent.getPrice().intValue() == 0}"
+                        >Free
+                        </div>
+                        <div class="col col-2" th:if="${userEvent.getPrice().intValue() != 0}"
+                             th:text="${#numbers.formatCurrency(userEvent.getPrice())}"></div>
                     </li>
 
                     <li class="table-row">
-                        <div class="col col-1">Private</div>
-                        <div class="col col-2" th:text="${userEvent.getIsPrivate()}"></div>
+                        <div class="col col-1">Privacy</div>
+                        <div class="col col-2" th:if="${userEvent.getIsPrivate()}">Private</div>
+                        <div class="col col-2" th:if="${not userEvent.getIsPrivate()}">Public</div>
                     </li>
                     <li class="table-row">
                         <div class="col col-1">Actions</div>
@@ -181,8 +192,8 @@
                             <a th:href="@{/events/{id}(id=${userEvent.getId()})}" class="btn btn-action"
                             >More</a
                             >
-                            <form th:action="@{/events/{id}/leave(id=${userEvent.getId()})}" th:method="put">
-                                <button type="submit" class="btn btn-action-red">Leave</button>
+                            <form th:action="@{/events/{id}/delete(id=${userEvent.getId()})}" th:method="delete">
+                                <button type="submit" class="btn btn-action-red">Delete</button>
                             </form>
                         </div>
                 </ul>

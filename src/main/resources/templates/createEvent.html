@@ -1,206 +1,223 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="icon" th:href="@{/images/favicon.ico}" />
-        <title>New event</title>
-        <script
-            src="https://kit.fontawesome.com/3ee52d1216.js"
-            crossorigin="anonymous"
-        ></script>
-    </head>
-    <body>
-        <div class="container">
-            <header>
-                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
-                <nav class="nav">
-                    <a th:href="@{/home}">Home</a>
-                    <a th:href="@{/events}">Events</a>
-                    <a th:href="@{/features}">Features</a>
-                    <a th:href="@{/about}">About us</a>
-                </nav>
-                <div class="login-area">
-                    <div class="flex-row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="btn btn-green">Logout</button>
-                        </form>
-                        <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
-                        <a th:href="@{/profile}" class="btn">Profile</a>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+	<link rel="stylesheet" th:href="@{/css/styles.css}"/>
+	<link rel="icon" th:href="@{/images/favicon.ico}"/>
+	<title>New event</title>
+	<script
+			src="https://kit.fontawesome.com/3ee52d1216.js"
+			crossorigin="anonymous"
+	></script>
+</head>
+<body>
+<div class="container">
+	<header>
+		<div class="logo"><a th:href="@{/}">EventMaster</a></div>
+		<nav class="nav">
+			<a th:href="@{/home}">Home</a>
+			<a th:href="@{/events}">Events</a>
+			<a th:href="@{/features}">Features</a>
+			<a th:href="@{/about}">About us</a>
+		</nav>
+		<div class="login-area">
+			<div class="flex-row" sec:authorize="isAuthenticated()">
+				<form th:action="@{/logout}" method="post">
+					<button type="submit" class="btn btn-green">Logout</button>
+				</form>
+				<!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+				<a th:href="@{/profile}" class="btn">Profile</a>
 
-                    </div>
-                    <div sec:authorize="isAnonymous()">
-                        <a th:href="@{/login}" class="btn btn-green">Login</a>
-                        <a th:href="@{/register}" class="btn">Register</a>
-                    </div>
-                </div>
-            </header>
-            <main class="event-main no-bg">
-                <section class="event-section">
-                    <h2 class="bg-h">Create a new event</h2>
-                    <div class="event-create-form">
-                        <form method="POST" th:action="@{/events/create}" class="form" th:object="${event}">
-                            <div class="input-area">
-                                <input
-                                    type="text"
-                                    name="title"
-                                    id="title"
-                                    placeholder="Title"
-                                    th:field="*{name}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('name')}"
-                                      th:errors="*{name}"></span>
-                            </div>
-                            <div class="input-area">
-                                <select name="venue" id="venue">
-                                    <option th:each="venue: ${venues}" th:value="${venue.getId()}" th:text="${venue.getName()}">
+			</div>
+			<div sec:authorize="isAnonymous()">
+				<a th:href="@{/login}" class="btn btn-green">Login</a>
+				<a th:href="@{/register}" class="btn">Register</a>
+			</div>
+		</div>
+	</header>
+	<main class="event-main no-bg">
+		<section class="event-section">
+			<h2 class="bg-h">Create a new event</h2>
+			<div class="event-create-form">
+				<form method="POST" th:action="@{/events/create}" class="form" th:object="${event}">
+					<div class="input-area">
+						<input
+								type="text"
+								name="title"
+								id="title"
+								placeholder="Title"
+								th:field="*{name}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('name')}"
+							  th:errors="*{name}"></span>
+					</div>
+					<div class="input-area">
+						<select name="venue" id="venue">
+							<option th:each="venue: ${venues}" th:value="${venue.getId()}" th:text="${venue.getName()}">
 
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="input-area">
-                                <input
-                                    type="number"
-                                    name="price"
-                                    id="price"
-                                    placeholder="Price"
-                                    th:field="*{price}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('price')}"
-                                      th:errors="*{price}"></span>
-                            </div>
-                            <div class="input-area">
-                                <input
-                                        type="text"
-                                        name="code"
-                                        id="code"
-                                        placeholder="Code for join"
-                                        th:field="*{code}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('code')}"
-                                      th:errors="*{code}"></span>
-                            </div>
-                            <div class="input-area">
-                                <input
-                                    type="number"
-                                    name="max-guests"
-                                    id="max-guests"
-                                    placeholder="Number of guests"
-                                    th:field="*{maxGuests}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('maxGuests')}"
-                                      th:errors="*{maxGuests}"></span>
-                            </div>
-                            <div class="input-area">
-                                <input
-                                    type="text"
-                                    name="topic"
-                                    id="topic"
-                                    placeholder="Main topic"
-                                    th:field="*{topic}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('topic')}"
-                                      th:errors="*{topic}"></span>
-                            </div>
-                            <div class="input-area">
-                                <input
-                                    type="text"
-                                    name="start"
-                                    id="start"
-                                    placeholder="Starts at: DD/MM/YYYY, HH:MM"
-                                    onfocus="(this.type='datetime-local')"
-                                    th:field="*{startDate}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('startDate')}"
-                                      th:errors="*{startDate}"></span>
-                            </div>
-                            <div class="input-area">
-                                <input
-                                    type="text"
-                                    name="end"
-                                    id="end"
-                                    placeholder="Ends at: DD/MM/YYYY, HH:MM"
-                                    onfocus="(this.type='datetime-local')"
-                                    th:field="*{endDate}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('endDate')}"
-                                      th:errors="*{endDate}"></span>
-                            </div>
-                            <div class="input-area">
-                                <input
-                                    type="number"
-                                    name="budget"
-                                    id="budget"
-                                    placeholder="Budget"
-                                    th:field="*{budget}"
-                                />
-                                <span class="validationError"
-                                      th:if="${#fields.hasErrors('budget')}"
-                                      th:errors="*{budget}"></span>
-                            </div>
-                            <div class="input-area">
+							</option>
+						</select>
+					</div>
+					<div class="input-area">
+						<select name="vendor" id="vendor" multiple th:field="*{vendors}">
+							<option th:each="vendor: ${allVendors}" th:value="${vendor.getId()}"
+									th:text="${vendor.getName()}">
+
+							</option>
+						</select>
+					</div>
+					<div class="input-area">
+						<input
+								type="number"
+								name="price"
+								id="price"
+								placeholder="Price"
+								th:field="*{price}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('price')}"
+							  th:errors="*{price}"></span>
+					</div>
+					<div class="input-area">
+						<input
+								type="text"
+								name="code"
+								id="code"
+								placeholder="Code for join"
+								th:field="*{code}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('code')}"
+							  th:errors="*{code}"></span>
+					</div>
+					<div class="input-area">
+						<input
+								type="number"
+								name="max-guests"
+								id="max-guests"
+								placeholder="Number of guests"
+								th:field="*{maxGuests}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('maxGuests')}"
+							  th:errors="*{maxGuests}"></span>
+					</div>
+					<div class="input-area">
+						<input
+								type="text"
+								name="topic"
+								id="topic"
+								placeholder="Main topic"
+								th:field="*{topic}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('topic')}"
+							  th:errors="*{topic}"></span>
+					</div>
+					<div class="input-area">
+						<input
+								type="text"
+								name="start"
+								id="start"
+								placeholder="Starts at: DD/MM/YYYY, HH:MM"
+								onfocus="(this.type='datetime-local')"
+								th:field="*{startDate}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('startDate')}"
+							  th:errors="*{startDate}"></span>
+						<span class="validationError"
+							  th:if="${startDateError}" th:text="${startDateError}"
+						></span>
+					</div>
+					<div class="input-area">
+						<input
+								type="text"
+								name="end"
+								id="end"
+								placeholder="Ends at: DD/MM/YYYY, HH:MM"
+								onfocus="(this.type='datetime-local')"
+								th:field="*{endDate}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('endDate')}"
+							  th:errors="*{endDate}"></span>
+						<span class="validationError"
+							  th:if="${endDateError}" th:text="${endDateError}"
+						></span>
+					</div>
+					<div class="input-area">
+						<input
+								type="number"
+								name="budget"
+								id="budget"
+								placeholder="Budget"
+								th:field="*{budget}"
+						/>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('budget')}"
+							  th:errors="*{budget}"></span>
+					</div>
+					<div class="input-area">
                                 <textarea
-                                    type="text"
-                                    name="description"
-                                    id="description"
-                                    placeholder="Description"
-                                    th:field="*{description}"
-                                ></textarea>
-                            </div>
-                            <div class="input-area radio">
-                                <div>
-                                    <label for="True">Private</label>
-                                    <input
-                                        type="radio"
-                                        id="True"
-                                        name="isPrivate"
-                                        value="True"
-                                        checked
-                                        th:field="*{isPrivate}"
-                                    />
-                                </div>
-                                <div>
-                                    <label for="False">Public</label>
-                                    <input
-                                        type="radio"
-                                        id="False"
-                                        name="isPrivate"
-                                        value="False"
-                                        checked
-                                        th:field="*{isPrivate}"
-                                    />
-                                </div>
-                            </div>
+										type="text"
+										name="description"
+										id="description"
+										placeholder="Description"
+										th:field="*{description}"
+								></textarea>
+						<span class="validationError"
+							  th:if="${#fields.hasErrors('description')}"
+							  th:errors="*{description}"></span>
+					</div>
+					<div class="input-area radio">
+						<div>
+							<label for="True">Private</label>
+							<input
+									type="radio"
+									id="True"
+									name="isPrivate"
+									value="True"
+									checked
+									th:field="*{isPrivate}"
+							/>
+						</div>
+						<div>
+							<label for="False">Public</label>
+							<input
+									type="radio"
+									id="False"
+									name="isPrivate"
+									value="False"
+									checked
+									th:field="*{isPrivate}"
+							/>
+						</div>
+					</div>
 
-                            <div class="input-area">
-                                <input
-                                    type="submit"
-                                    name="submit"
-                                    id="submit"
-                                    value="Create"
-                                    class="btn btn-green"
-                                />
-                            </div>
-                        </form>
-                    </div>
-                </section>
-            </main>
-            <footer>
-                <p class="footer-text">
-                    &copy; 2023 EventMaster. All rights are reserved. With Love,
-                    Azimbek
-                </p>
-            </footer>
-        </div>
-    </body>
+					<div class="input-area">
+						<input
+								type="submit"
+								name="submit"
+								id="submit"
+								value="Create"
+								class="btn btn-green"
+						/>
+					</div>
+				</form>
+			</div>
+		</section>
+	</main>
+	<footer>
+		<p class="footer-text">
+			&copy; 2023 EventMaster. All rights are reserved. With Love,
+			Azimbek
+		</p>
+	</footer>
+</div>
+</body>
 </html>

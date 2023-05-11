@@ -2,145 +2,146 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="icon" th:href="@{/images/favicon.ico}" />
-        <title>Home</title>
-    </head>
-    <body>
-        <div class="container">
-            <header>
-                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
-                <nav class="nav">
-                    <a class="active" th:href="@{/home}">Home</a>
-                    <a th:href="@{/events}">Events</a>
-                    <a th:href="@{/features}">Features</a>
-                    <a th:href="@{/about}">About us</a>
-                </nav>
-                <div class="login-area">
-                    <div class="flex-row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="btn btn-green">Logout</button>
-                        </form>
-                        <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
-                        <a th:href="@{/profile}" class="btn">Profile</a>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="icon" th:href="@{/images/favicon.ico}"/>
+    <title>Home</title>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div class="logo"><a th:href="@{/}">EventMaster</a></div>
+        <nav class="nav">
+            <a class="active" th:href="@{/home}">Home</a>
+            <a th:href="@{/events}">Events</a>
+            <a th:href="@{/features}">Features</a>
+            <a th:href="@{/about}">About us</a>
+        </nav>
+        <div class="login-area">
+            <div class="flex-row" sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-green">Logout</button>
+                </form>
+                <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+                <a th:href="@{/profile}" class="btn">Profile</a>
 
-                    </div>
-                    <div sec:authorize="isAnonymous()">
-                        <a th:href="@{/login}" class="btn btn-green">Login</a>
-                        <a th:href="@{/register}" class="btn">Register</a>
-                    </div>
-                </div>
-            </header>
-            <main class="no-bg user-home">
-                <h1>Welcome back, <span th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></span></h1>
-                <div class="cards">
-                    <div class="card">
-                        <h3>
-                            My events
-                            <a th:href="@{/events/user}" class="btn btn-green">More</a>
-                        </h3>
-                        <div class="links" th:if="${not #lists.isEmpty(userEvents)}" th:each="userEvent: ${userEvents}">
-                            <div class="link" >
-                                <p th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}"></p>
-                                <a th:href="@{/events/{id}(id=${userEvent.getId()})}"
-                                   th:text="${userEvent.getName()}"></a>
-                            </div>
-                        </div>
-                        <div class="links" th:if="${#lists.isEmpty(userEvents)}">
-                            You don't have active   events
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>
-                            Explore events
-                            <a th:href="@{/events/all}" class="btn btn-green">More</a>
-                        </h3>
-                        <div class="links" th:if="${not #lists.isEmpty(events)}" th:each="event: ${events}">
-                            <div class="link" >
-                                <p th:text="${#temporals.format(event.getStartDate(), 'dd.MM.yyyy, HH:mm')}"></p>
-                                <a th:href="@{/events/{id}(id=${event.getId()})}"
-                                   th:text="${event.getName()}"></a>
-                            </div>
-                        </div>
-                        <div class="links" th:if="${#lists.isEmpty(events)}">
-                            No active events
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>
-                            Assigned tasks
-                            <a th:href="@{/tasks}" class="btn btn-green">More</a>
-                        </h3>
-                        <div class="links" th:if="${not #lists.isEmpty(userTasks)}" th:each="userTask: ${userTasks}">
-                            <div class="link">
-                                <p th:text="${#temporals.format(userTask.getDue(), 'dd.MM.yyyy, HH:mm')}"></p>
-                                <a th:href="@{/tasks/{id}(id=${userTask.getId()})}"
-                                   th:text="${userTask.getTitle()}"></a>
-                            </div>
-                        </div>
-                        <div class="links" th:if="${#lists.isEmpty(userTasks)}">
-                            No active tasks
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>
-                            Order history
-                            <a th:href="@{/orders}" class="btn btn-green">More</a>
-                        </h3>
-                        <div class="links" th:if="${not #lists.isEmpty(userOrders)}" th:each="userOrder: ${userOrders}">
-                            <div class="link">
-                                <p th:text="${#temporals.format(userOrder.getDate(), 'dd.MM.yyyy')}"></p>
-                                <a th:href="@{/orders/{id}(id=${userOrder.getId()})}"
-                                        th:text="${userOrder.getEvent().getName()}"></a>
-                            </div>
-                        </div>
-                        <div class="links" th:if="${#lists.isEmpty(userOrders)}">
-                            No orders
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>
-                            Venues
-                            <a th:href="@{/venues}" class="btn btn-green">More</a>
-                        </h3>
-                        <div class="links" th:if="${not #lists.isEmpty(venues)}" th:each="venue: ${venues}">
-                            <div class="link">
-                                    <a th:href="@{/venues/{id}(id=${venue.getId()})}"
-                                       th:text="${venue.getName()}"></a>
-                                <p th:text="${#numbers.formatCurrency(venue.getPrice().intValue())}"></p>
-                            </div>
-                        </div>
-                        <div class="links" th:if="${#lists.isEmpty(venues)}">
-                            No venues
-                        </div>
-                    </div>
-                    <div class="card">
-                        <h3>
-                            Vendors
-                            <a th:href="@{/vendors}" class="btn btn-green">More</a>
-                        </h3>
-                        <div class="links" th:if="${not #lists.isEmpty(vendors)}" th:each="vendor: ${vendors}">
-                            <div class="link">
-                                <a th:href="@{/vendors/{id}(id=${vendor.getId()})}"
-                                   th:text="${vendor.getName()}"></a>
-                                <p th:text="${#numbers.formatCurrency(vendor.getPrice().intValue())}"></p>
-                            </div>
-                        </div>
-                        <div class="links" th:if="${#lists.isEmpty(vendors)}">
-                            No vendors
-                        </div>
-                    </div>
-                </div>
-            </main>
-            <footer>
-                <p class="footer-text">
-                    &copy; 2023 EventMaster. All rights are reserved. With Love,
-                    Azimbek
-                </p>
-            </footer>
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <a th:href="@{/login}" class="btn btn-green">Login</a>
+                <a th:href="@{/register}" class="btn">Register</a>
+            </div>
         </div>
-    </body>
+    </header>
+    <main class="no-bg user-home">
+        <h1>Welcome back, <span th:text="${user.getFirstName()} + ' ' + ${user.getLastName()}"></span></h1>
+        <div class="cards">
+            <div class="card">
+                <h3>
+                    My events
+                    <a th:href="@{/events/user}" class="btn btn-green">More</a>
+                </h3>
+                <div class="links" th:if="${not #lists.isEmpty(userEvents)}" th:each="userEvent: ${userEvents}">
+                    <div class="link">
+                        <p th:text="${#temporals.format(userEvent.getStartDate(), 'dd.MM.yyyy, HH:mm')}"></p>
+                        <a th:href="@{/events/{id}(id=${userEvent.getId()})}"
+                           th:text="${userEvent.getName()}"></a>
+                    </div>
+                </div>
+                <div class="links" th:if="${#lists.isEmpty(userEvents)}">
+                    You don't have active events
+                </div>
+            </div>
+            <div class="card">
+                <h3>
+                    Explore events
+                    <a th:href="@{/events/all}" class="btn btn-green">More</a>
+                </h3>
+                <div class="links" th:if="${not #lists.isEmpty(events)}" th:each="event: ${events}">
+                    <div class="link">
+                        <p th:text="${#temporals.format(event.getStartDate(), 'dd.MM.yyyy, HH:mm')}"></p>
+                        <a th:href="@{/events/{id}(id=${event.getId()})}"
+                           th:text="${event.getName()}"></a>
+                    </div>
+                </div>
+                <div class="links" th:if="${#lists.isEmpty(events)}">
+                    No active events
+                </div>
+            </div>
+            <div class="card">
+                <h3>
+                    Assigned tasks
+                    <a th:href="@{/tasks}" class="btn btn-green">More</a>
+                </h3>
+                <div class="links" th:if="${not #lists.isEmpty(userTasks)}" th:each="userTask: ${userTasks}">
+                    <div class="link">
+                        <p th:text="${#temporals.format(userTask.getDue(), 'dd.MM.yyyy, HH:mm')}"></p>
+                        <a th:href="@{/tasks/{id}(id=${userTask.getId()})}"
+                           th:text="${userTask.getTitle()}"></a>
+                    </div>
+                </div>
+                <div class="links" th:if="${#lists.isEmpty(userTasks)}">
+                    No active tasks
+                </div>
+            </div>
+            <div class="card">
+                <h3>
+                    Order history
+                    <a th:href="@{/orders}" class="btn btn-green">More</a>
+                </h3>
+                <div class="links" th:if="${not #lists.isEmpty(userOrders)}" th:each="userOrder: ${userOrders}">
+                    <div class="link">
+                        <p th:text="${#temporals.format(userOrder.getDate(), 'dd.MM.yyyy')}"></p>
+                        <a th:if="${order.getEvent() != null}" th:href="@{/orders/{id}(id=${userOrder.getId()})}"
+                           th:text="${userOrder.getEvent()?.getName()}"></a>
+                        <p th:if="${order.getEvent() == null}">Deleted event</p>
+                    </div>
+                </div>
+                <div class="links" th:if="${#lists.isEmpty(userOrders)}">
+                    No orders
+                </div>
+            </div>
+            <div class="card">
+                <h3>
+                    Venues
+                    <a th:href="@{/venues}" class="btn btn-green">More</a>
+                </h3>
+                <div class="links" th:if="${not #lists.isEmpty(venues)}" th:each="venue: ${venues}">
+                    <div class="link">
+                        <a th:href="@{/venues/{id}(id=${venue.getId()})}"
+                           th:text="${venue.getName()}"></a>
+                        <p th:text="${#numbers.formatCurrency(venue.getPrice().intValue())}"></p>
+                    </div>
+                </div>
+                <div class="links" th:if="${#lists.isEmpty(venues)}">
+                    No venues
+                </div>
+            </div>
+            <div class="card">
+                <h3>
+                    Vendors
+                    <a th:href="@{/vendors}" class="btn btn-green">More</a>
+                </h3>
+                <div class="links" th:if="${not #lists.isEmpty(vendors)}" th:each="vendor: ${vendors}">
+                    <div class="link">
+                        <a th:href="@{/vendors/{id}(id=${vendor.getId()})}"
+                           th:text="${vendor.getName()}"></a>
+                        <p th:text="${#numbers.formatCurrency(vendor.getPrice().intValue())}"></p>
+                    </div>
+                </div>
+                <div class="links" th:if="${#lists.isEmpty(vendors)}">
+                    No vendors
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p class="footer-text">
+            &copy; 2023 EventMaster. All rights are reserved. With Love,
+            Azimbek
+        </p>
+    </footer>
+</div>
+</body>
 </html>
