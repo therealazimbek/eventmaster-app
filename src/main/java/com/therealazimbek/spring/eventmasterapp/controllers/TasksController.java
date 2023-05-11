@@ -1,6 +1,5 @@
 package com.therealazimbek.spring.eventmasterapp.controllers;
 
-import com.therealazimbek.spring.eventmasterapp.models.Event;
 import com.therealazimbek.spring.eventmasterapp.models.Task;
 import com.therealazimbek.spring.eventmasterapp.models.TaskStatus;
 import com.therealazimbek.spring.eventmasterapp.models.User;
@@ -14,12 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
-import java.util.UUID;
-import java.util.regex.Pattern;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/tasks")
@@ -43,125 +40,122 @@ public class TasksController {
         return new Task();
     }
 
+    @ModelAttribute
+    public void addAttributes(Model model, Authentication authentication) {
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (user.isPresent()) {
+            model.addAttribute("user", user.get());
+            model.addAttribute("activeTasks", user.get().getTasks().stream().filter(
+                    task -> !task.getTaskStatus().equals(TaskStatus.COMPLETED)
+            ).toList());
+            model.addAttribute("completedTasks", user.get().getTasks().stream().filter(
+                    task -> task.getTaskStatus().equals(TaskStatus.COMPLETED)
+            ).toList());
+            model.addAttribute("events", user.get().getCreatedEvents().stream().filter(
+                    event -> LocalDateTime.now().isBefore(event.getStartDate()) ||
+                            LocalDateTime.now().isEqual(event.getStartDate())
+            ).toList());
+            model.addAttribute("categories", taskCategoryService.findAll());
+        }
+    }
+
     @GetMapping
-    public String tasks(Model model, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
-        model.addAttribute("user", user);
-        model.addAttribute("activeTasks", user.getTasks().stream().filter(
-                task -> !task.getTaskStatus().equals(TaskStatus.COMPLETED)
-        ).toList());
-        model.addAttribute("completedTasks", user.getTasks().stream().filter(
-                task -> task.getTaskStatus().equals(TaskStatus.COMPLETED)
-        ).toList());
+    public String tasks() {
         return "tasks";
     }
 
     @GetMapping("/create")
-    public String create(Model model, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
-        model.addAttribute("events", user.getCreatedEvents().stream().filter(
-                event -> LocalDateTime.now().isBefore(event.getStartDate()) ||
-                        LocalDateTime.now().isEqual(event.getStartDate())
-        ).toList());
-        model.addAttribute("categories", taskCategoryService.findAll());
-        return "createTask";
+    public String create(Authentication authentication) {
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (user.isPresent()) {
+
+            return "createTask";
+        }
+        return "redirect:/notfound";
     }
 
     @PostMapping("/create")
     public String create(@Valid Task task, BindingResult bindingResult, Authentication authentication) {
-        if (bindingResult.hasErrors()) {
-            return "createTask";
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (user.isPresent()) {
+            if (bindingResult.hasErrors()) {
+                return "createTask";
+            }
+            task.setUser(user.get());
+            taskService.save(task);
+            return "redirect:/tasks";
         }
-        User user = userService.findByUsername(authentication.getName());
-        task.setUser(user);
-        taskService.save(task);
-//        log.info(task.toString());
-        return "redirect:/tasks";
+        return "redirect:/notfound";
     }
 
     @GetMapping("/{id}")
     public String task(@PathVariable String id, Model model, Authentication authentication) {
-        try {
-            Task task = taskService.findById(Long.valueOf(id));
-            User user = userService.findByUsername(authentication.getName());
-            model.addAttribute("task", task);
-            model.addAttribute("user", user);
-            return "task";
-        } catch (ResponseStatusException e) {
-            return "redirect:/notfound";
+        Optional<Task> task = taskService.findById(Long.valueOf(id));
+        if (task.isPresent()) {
+            if (Objects.equals(task.get().getUser().getUsername(), authentication.getName())) {
+                model.addAttribute("task", task.get());
+                return "task";
+            }
         }
+        return "redirect:/notfound";
     }
 
     @GetMapping("/{id}/edit")
     public String edit(@PathVariable String id, Model model, Authentication authentication) {
-        try {
-            Task task = taskService.findById(Long.valueOf(id));
-            User user = userService.findByUsername(authentication.getName());
-            model.addAttribute("task", task);
-            model.addAttribute("user", user);
-            model.addAttribute("events", user.getCreatedEvents().stream().filter(
+        Optional<Task> task = taskService.findById(Long.valueOf(id));
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (task.isPresent() && user.isPresent()) {
+            model.addAttribute("task", task.get());
+            model.addAttribute("events", user.get().getCreatedEvents().stream().filter(
                     event -> LocalDateTime.now().isBefore(event.getStartDate()) ||
                             LocalDateTime.now().isEqual(event.getStartDate())
             ).toList());
             model.addAttribute("categories", taskCategoryService.findAll());
             return "updateTask";
-        } catch (ResponseStatusException e) {
-            return "redirect:/notfound";
         }
+        return "redirect:/notfound";
     }
 
     @PutMapping("/{id}/edit")
-    public String edit(@PathVariable String id, @Valid Task t, Model model, Authentication authentication) {
-        try {
-            Task task = taskService.findById(Long.valueOf(id));
-            User user = userService.findByUsername(authentication.getName());
-
-            if (Objects.equals(task.getUser().getUsername(), user.getUsername())) {
-                model.addAttribute("task", task);
-                model.addAttribute("user", user);
-                model.addAttribute("events", user.getCreatedEvents().stream().filter(
-                        event -> LocalDateTime.now().isBefore(event.getStartDate()) ||
-                                LocalDateTime.now().isEqual(event.getStartDate())
-                ).toList());
-                model.addAttribute("categories", taskCategoryService.findAll());
-                t.setUser(user);
+    public String edit(@PathVariable String id, @Valid Task t, Authentication authentication) {
+        Optional<Task> task = taskService.findById(Long.valueOf(id));
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (task.isPresent() && user.isPresent()) {
+            if (Objects.equals(task.get().getUser().getUsername(), user.get().getUsername())) {
+                t.setUser(user.get());
                 taskService.update(t);
                 return "redirect:/tasks";
             }
             return "redirect:/nopermission";
-        } catch (ResponseStatusException e) {
-            return "redirect:/notfound";
         }
+        return "redirect:/notfound";
     }
 
     @DeleteMapping("/{id}/delete")
     public String delete(@PathVariable String id, Authentication authentication) {
-        try {
-            Task task = taskService.findById(Long.valueOf(id));
-            if (Objects.equals(task.getUser().getUsername(), authentication.getName())) {
+        Optional<Task> task = taskService.findById(Long.valueOf(id));
+        if (task.isPresent()) {
+            if (Objects.equals(task.get().getUser().getUsername(), authentication.getName())) {
                 taskService.delete(Long.valueOf(id));
                 return "redirect:/tasks";
             } else {
                 return "redirect:/nopermission";
             }
-
-        } catch (ResponseStatusException e) {
-            return "redirect:/notfound";
         }
+        return "redirect:/notfound";
     }
 
     @PutMapping("/{id}/complete")
     public String complete(@PathVariable String id, Authentication authentication) {
-        try {
-            Task task = taskService.findById(Long.valueOf(id));
-            if(Objects.equals(task.getUser().getUsername(), authentication.getName())) {
+        Optional<Task> task = taskService.findById(Long.valueOf(id));
+        if (task.isPresent()) {
+            if (Objects.equals(task.get().getUser().getUsername(), authentication.getName())) {
                 taskService.complete(Long.valueOf(id));
                 return "redirect:/tasks";
             } else {
                 return "redirect:/nopermission";
             }
-        } catch (ResponseStatusException e) {
-            return "redirect:/notfound";
         }
+        return "redirect:/notfound";
     }
 }

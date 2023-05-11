@@ -2,250 +2,260 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" th:href="@{/css/styles.css}" />
-    <link rel="icon" th:href="@{/images/favicon.ico}" />
-        <title>Event details</title>
-        <script
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <link rel="icon" th:href="@{/images/favicon.ico}"/>
+    <title>Event details</title>
+    <script
             src="https://kit.fontawesome.com/3ee52d1216.js"
             crossorigin="anonymous"
-        ></script>
-    </head>
-    <body>
-        <div class="modal">
+    ></script>
+</head>
+<body>
+<div class="modal">
 
 
-                <form th:method="put" th:action="@{/events/{id}/addVendor(id=${event.getId()})}" class="form" th:object="${event}">
-                    <div class="input-area">
-                        <select name="vendor" id="vendor" multiple th:field="*{vendors}">
-                            <option th:each="vendor: ${allVendors}" th:value="${vendor.getId()}" th:text="${vendor.getName()}">
+    <form th:method="put" th:action="@{/events/{id}/addVendor(id=${event.getId()})}" class="form" th:object="${event}">
+        <div class="input-area">
+            <select name="vendor" id="vendor" multiple th:field="*{vendors}">
+                <option th:each="vendor: ${allVendors}" th:value="${vendor.getId()}" th:text="${vendor.getName()}">
 
-                            </option>
-                        </select>
-                    </div>
-                    <div class="input-area">
-                        <input
-                                type="submit"
-                                name="submit"
-                                id="submit"
-                                value="Add"
-                                class="btn btn-green"
-                        />
-
-                    </div>
-                    <div>
-                        <a href="javascript:close();" class="btn">Close</a>
-                        <a th:href="@{/vendors/create}" class="btn">Add a new vendor</a>
-                    </div>
-
-                </form>
+                </option>
+            </select>
+        </div>
+        <div class="input-area">
+            <input
+                    type="submit"
+                    name="submit"
+                    id="submit"
+                    value="Add"
+                    class="btn btn-green"
+            />
 
         </div>
-        <div class="addGuestModal">
+        <div>
+            <a href="javascript:close();" class="btn">Close</a>
+            <a th:href="@{/vendors/create}" class="btn">Add a new vendor</a>
+        </div>
+
+    </form>
+
+</div>
+<div class="addGuestModal">
 
 
-                <form th:method="put" th:action="@{/events/{id}/addGuest(id=${event.getId()})}" class="form" th:object="${event}">
-                    <div class="input-area">
-                        <select name="guest" id="guest" multiple th:field="*{eventUsers}">
-                            <option th:each="availableUser: ${availableUsers}" th:value="${availableUser.getUserEventId()}" th:text="${availableUser.getUser().getFirstName()} + ' ' + ${availableUser.getUser().getLastName()}">
+    <form th:method="put" th:action="@{/events/{id}/addGuest(id=${event.getId()})}" class="form"
+          th:object="${userEvent}">
+        <div class="input-area">
+            <select name="guest" id="guest" th:field="*{user}">
+                <option th:each="availableUser: ${availableUsers}" th:value="${availableUser.getId()}"
+                        th:text="${availableUser.getFirstName()} + ' ' + ${availableUser.getLastName()}">
 
-                            </option>
-                        </select>
-                    </div>
-                    <div class="input-area">
-                        <input
-                                type="submit"
-                                name="submit"
-                                value="Add"
-                                class="btn btn-green"
-                        />
-
-                    </div>
-                    <div>
-                        <a href="javascript:close();" class="btn">Close</a>
-                        <a th:href="@{/vendors/create}" class="btn">Add a new vendor</a>
-                    </div>
-
-                </form>
+                </option>
+            </select>
+        </div>
+        <div class="input-area">
+            <input
+                    type="submit"
+                    name="submit"
+                    value="Add"
+                    class="btn btn-green"
+            />
 
         </div>
-        <div class="buyModal">
-            <form method="POST" th:action="@{/events/{event_id}/buy(event_id=${event.getId()})}" class="form" th:object="${userPaymentCard}">
-                    <div class="input-area">
-                        <select name="card" id="card">
-                            <option th:each="userPaymentCard: ${userPaymentCards}" th:value="${userPaymentCard}" th:text="${userPaymentCard.getId()}">
+        <div>
+            <a href="javascript:close();" class="btn">Close</a>
+            <a th:href="@{/vendors/create}" class="btn">Add a new vendor</a>
+        </div>
 
-                            </option>
-                        </select>
-                    </div>
-                    <div class="input-area">
-                        <input
-                                type="submit"
-                                name="submit"
-                                value="Buy and join"
-                                class="btn btn-green"
-                        />
+    </form>
 
-                    </div>
-                    <div>
-                        <a href="javascript:closeBuyForm();" class="btn">Close</a>
-                        <a th:href="@{/profile/addCard}" class="btn">Add a new card</a>
-                    </div>
+</div>
+<div class="buyModal">
+    <form method="POST" th:action="@{/events/{event_id}/buy(event_id=${event.getId()})}" class="form"
+          th:object="${userPaymentCard}">
+        <div class="input-area">
+            <select name="card" id="card">
+                <option th:each="userPaymentCard: ${userPaymentCards}" th:value="${userPaymentCard}"
+                        th:text="${userPaymentCard.getId()}">
 
-                </form>
+                </option>
+            </select>
+        </div>
+        <div class="input-area">
+            <input
+                    type="submit"
+                    name="submit"
+                    value="Buy and join"
+                    class="btn btn-green"
+            />
 
         </div>
-        <div class="container">
-            <header>
-                <div class="logo"><a th:href="@{/}">EventMaster</a></div>
-                <nav class="nav">
-                    <a th:href="@{/home}">Home</a>
-                    <a class="active" th:href="@{/events}">Events</a>
-                    <a th:href="@{/features}">Features</a>
-                    <a th:href="@{/about}">About us</a>
-                </nav>
-                <div class="login-area">
-                    <div class="flex-row" sec:authorize="isAuthenticated()">
-                        <form th:action="@{/logout}" method="post">
-                            <button type="submit" class="btn btn-green">Logout</button>
-                        </form>
-                        <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
-                        <a th:href="@{/profile}" class="btn">Profile</a>
+        <div>
+            <a href="javascript:closeBuyForm();" class="btn">Close</a>
+            <a th:href="@{/profile/addCard}" class="btn">Add a new card</a>
+        </div>
 
-                    </div>
-                    <div sec:authorize="isAnonymous()">
-                        <a th:href="@{/login}" class="btn btn-green">Login</a>
-                        <a th:href="@{/register}" class="btn">Register</a>
-                    </div>
-                </div>
-            </header>
-            <main class="event-main no-bg">
-                <section class="event-section">
-                    <h2 class="bg-h">Event details</h2>
+    </form>
 
-                    <div class="events">
-                        <ul class="responsive-table" th:object="${event}">
-                            <li class="table-row">
-                                <div class="col col-1">Title</div>
-                                <div class="col col-2" th:text="${event.getName()}">
+</div>
+<div class="container">
+    <header>
+        <div class="logo"><a th:href="@{/}">EventMaster</a></div>
+        <nav class="nav">
+            <a th:href="@{/home}">Home</a>
+            <a class="active" th:href="@{/events}">Events</a>
+            <a th:href="@{/features}">Features</a>
+            <a th:href="@{/about}">About us</a>
+        </nav>
+        <div class="login-area">
+            <div class="flex-row" sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-green">Logout</button>
+                </form>
+                <!--                        <a th:href="@{/logout}" class="btn btn-green">Logout</a>-->
+                <a th:href="@{/profile}" class="btn">Profile</a>
 
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Description</div>
-                                <div class="col col-2" th:text="${event.getDescription()}">
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <a th:href="@{/login}" class="btn btn-green">Login</a>
+                <a th:href="@{/register}" class="btn">Register</a>
+            </div>
+        </div>
+    </header>
+    <main class="event-main no-bg">
+        <section class="event-section">
+            <h2 class="bg-h">Event details</h2>
 
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Starts at</div>
-                                <div class="col col-2" th:text="${#temporals.format(event.getStartDate(), 'dd.MM.yyyy, HH:mm')}">
+            <div class="events">
+                <ul class="responsive-table" th:object="${event}">
+                    <li class="table-row">
+                        <div class="col col-1">Title</div>
+                        <div class="col col-2" th:text="${event.getName()}">
 
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Ends at</div>
-                                <div class="col col-2" th:text="${#temporals.format(event.getEndDate(), 'dd.MM.yyyy, HH:mm')}">
-
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Address</div>
-                                <div class="col col-2" th:text="${event.getVenue()?.getAddress()}">
-
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Members</div>
-                                <div class="col col-2" th:text="${event.getEventUsers().size()} + '/' + ${event.getMaxGuests()}"></div>
-                            </li>
-
-                            <li class="table-row">
-                                <div class="col col-1">Price</div>
-                                <div class="col col-2" th:text="${event.getPrice()}"></div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Budget</div>
-                                <div class="col col-2" th:text="${event.getBudget()}"></div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Private</div>
-                                <div class="col col-2" th:text="${event.getIsPrivate()}"></div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Venue</div>
-                                <div class="col col-2">
-                                    <a th:href="@{/venues/{id}(id=${venue.getId()})}"
-                                       th:text="${venue.getName()}"
-                                        ></a
-                                    >
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Vendors</div>
-                                <div class="col col-2 vendors" >
-                                    <a th:each="vendor: ${vendors}" th:href="@{/vendors/{id}(id=${vendor.getId()})}"
-                                       th:text="${vendor.getName()}"></a>
-                                </div>
-                            </li>
-                            <li class="table-row">
-                                <div class="col col-1">Actions</div>
-                                <div class="col col-2 actions">
-                                    <form th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)
-                                                    and event.getPrice().intValue() <= 0}" th:action="@{/events/{id}/join(id=${event.getId()})}" th:method="put">
-                                        <button type="submit" class="btn btn-green">Join</button>
-                                    </form>
-                                    <a href="javascript:buyForm()" class="btn btn-green"
-                                       th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)
-                                                    and event.getPrice().intValue() > 0}">Buy</a>
-                                    <form th:if="${event.user.username != user.username and userJoinedEvents.contains(event)}" th:action="@{/events/{id}/leave(id=${event.getId()})}" th:method="put">
-                                        <button type="submit" class="btn btn-action-red">Leave</button>
-                                    </form>
-                                    <a th:href="@{/events/{id}/edit(id=${event.getId()})}" class="btn btn-action-orange"
-                                       th:if="${event.user.username == user.username}"
-                                        >Edit</a
-                                    >
-                                    <a
-                                        href="javascript:addVendor();"
-                                        class="btn btn-action-orange"
-                                        th:if="${event.user.username == user.username}"
-                                        >Add vendor</a
-                                    >
-<!--                                    <a-->
-<!--                                            href="javascript:addGuests();"-->
-<!--                                            class="btn btn-action-orange"-->
-<!--                                            th:if="${event.user.username == user.username}"-->
-<!--                                    >Add guests</a-->
-<!--                                    >-->
-                                    <form th:if="${event.user.username == user.username}" th:action="@{/events/{id}/delete(id=${event.getId()})}" th:method="delete">
-                                        <button type="submit" class="btn btn-action-red">Delete</button>
-                                    </form>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </section>
-
-                <section class="event-section">
-                    <h2 class="bg-h">Members</h2>
-
-                    <div class="events">
-                        <div class="card member-card" th:each="member: ${event.getEventUsers()}">
-                            <a th:href="@{/users/{id}(id=${member.getUser().getId()})}" th:text="${member.getUser().getFirstName()}"></a>
-                            <p th:text="${member.getUserRole()}"></p>
                         </div>
-                    </div>
-                </section>
-            </main>
-            <footer>
-                <p class="footer-text">
-                    &copy; 2023 EventMaster. All rights are reserved. With Love,
-                    Azimbek
-                </p>
-            </footer>
-        </div>
-        <script th:src="@{/js/app.js}"></script>
-    </body>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Description</div>
+                        <div class="col col-2" th:text="${event.getDescription()}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Starts at</div>
+                        <div class="col col-2"
+                             th:text="${#temporals.format(event.getStartDate(), 'dd.MM.yyyy, HH:mm')}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Ends at</div>
+                        <div class="col col-2" th:text="${#temporals.format(event.getEndDate(), 'dd.MM.yyyy, HH:mm')}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Address</div>
+                        <div class="col col-2" th:text="${event.getVenue()?.getAddress()}">
+
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Members</div>
+                        <div class="col col-2"
+                             th:text="${event.getEventUsers().size()} + '/' + ${event.getMaxGuests()}"></div>
+                    </li>
+
+                    <li class="table-row">
+                        <div class="col col-1">Price</div>
+                        <div class="col col-2" th:text="${event.getPrice()}"></div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Budget</div>
+                        <div class="col col-2" th:text="${event.getBudget()}"></div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Private</div>
+                        <div class="col col-2" th:text="${event.getIsPrivate()}"></div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Venue</div>
+                        <div class="col col-2">
+                            <a th:href="@{/venues/{id}(id=${venue.getId()})}"
+                               th:text="${venue.getName()}"
+                            ></a
+                            >
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Vendors</div>
+                        <div class="col col-2 vendors">
+                            <a th:each="vendor: ${vendors}" th:href="@{/vendors/{id}(id=${vendor.getId()})}"
+                               th:text="${vendor.getName()}"></a>
+                        </div>
+                    </li>
+                    <li class="table-row">
+                        <div class="col col-1">Actions</div>
+                        <div class="col col-2 actions">
+                            <form th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)
+                                                    and event.getPrice().intValue() <= 0}"
+                                  th:action="@{/events/{id}/join(id=${event.getId()})}" th:method="put">
+                                <button type="submit" class="btn btn-green">Join</button>
+                            </form>
+                            <a href="javascript:buyForm()" class="btn btn-green"
+                               th:if="${event.user.username != user.username and not userJoinedEvents.contains(event)
+                                                    and event.getPrice().intValue() > 0}">Buy</a>
+                            <form th:if="${event.user.username != user.username and userJoinedEvents.contains(event)}"
+                                  th:action="@{/events/{id}/leave(id=${event.getId()})}" th:method="put">
+                                <button type="submit" class="btn btn-action-red">Leave</button>
+                            </form>
+                            <a th:href="@{/events/{id}/edit(id=${event.getId()})}" class="btn btn-action-orange"
+                               th:if="${event.user.username == user.username}"
+                            >Edit</a
+                            >
+                            <a
+                                    href="javascript:addVendor();"
+                                    class="btn btn-action-orange"
+                                    th:if="${event.user.username == user.username}"
+                            >Add vendor</a
+                            >
+                            <a
+                                    href="javascript:addGuests();"
+                                    class="btn btn-action-orange"
+                                    th:if="${event.user.username == user.username}"
+                            >Add guests</a
+                            >
+                            <form th:if="${event.user.username == user.username}"
+                                  th:action="@{/events/{id}/delete(id=${event.getId()})}" th:method="delete">
+                                <button type="submit" class="btn btn-action-red">Delete</button>
+                            </form>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="event-section">
+            <h2 class="bg-h">Members</h2>
+
+            <div class="events">
+                <div class="card member-card" th:each="member: ${event.getEventUsers()}">
+                    <a th:href="@{/users/{id}(id=${member.getUser().getId()})}"
+                       th:text="${member.getUser().getFirstName()}"></a>
+                    <p th:text="${member.getUserRole()}"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p class="footer-text">
+            &copy; 2023 EventMaster. All rights are reserved. With Love,
+            Azimbek
+        </p>
+    </footer>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
 </html>

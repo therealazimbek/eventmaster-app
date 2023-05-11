@@ -10,7 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/vendors")
@@ -61,12 +62,11 @@ public class VendorsController {
 
     @GetMapping("/{id}")
     public String findVenueById(@PathVariable Long id, Model model) {
-        try {
-            Vendor vendor = vendorService.findById(id);
-            model.addAttribute("vendor", vendor);
+        Optional<Vendor> vendor = vendorService.findById(id);
+        if (vendor.isPresent()) {
+            model.addAttribute("vendor", vendor.get());
             return "vendor";
-        } catch (ResponseStatusException e) {
-            return "redirect:/notfound";
         }
+        return "redirect:/notfound";
     }
 }

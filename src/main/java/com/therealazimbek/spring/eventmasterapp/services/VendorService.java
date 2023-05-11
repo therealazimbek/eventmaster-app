@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,17 +25,13 @@ public class VendorService {
         return vendorRepository.findAll();
     }
 
-    public Vendor findById(Long id) {
-        if (vendorRepository.findById(id).isPresent()) {
-            return vendorRepository.findById(id).get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public Optional<Vendor> findById(Long id) {
+        return vendorRepository.findById(id);
     }
 
     public List<Event> findVendorEvents(Long id) {
-        Vendor vendor = findById(id);
-        return vendor.getEvents();
+        Optional<Vendor> vendor = findById(id);
+        return vendor.map(Vendor::getEvents).orElse(null);
     }
 
     public void save(Vendor vendor) {

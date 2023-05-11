@@ -49,6 +49,9 @@
                             <span class="validationError"
                                   th:if="${#fields.hasErrors('email')}"
                                   th:errors="*{email}"></span>
+                            <span class="validationError"
+                                  th:if="${emailError}" th:text="${emailError}"
+                            ></span>
                         </div>
                         <div class="input-area">
                             <input
@@ -61,6 +64,9 @@
                             <span class="validationError"
                                   th:if="${#fields.hasErrors('username')}"
                                   th:errors="*{username}"></span>
+                            <span class="validationError"
+                                  th:if="${usernameError}" th:text="${usernameError}"
+                                  ></span>
                         </div>
                         <div class="input-area">
                             <input
@@ -97,6 +103,9 @@
                             <span class="validationError"
                                   th:if="${#fields.hasErrors('phone')}"
                                   th:errors="*{phone}"></span>
+                            <span class="validationError"
+                                  th:if="${phoneError}" th:text="${phoneError}"
+                            ></span>
                         </div>
                         <div class="input-area">
                             <input

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -28,12 +29,12 @@ public class TaskService {
     }
 
     public List<Task> findAllUserTasks(Long id) {
-        User user = userService.findById(id);
-        return user.getTasks();
+        Optional<User> user = userService.findById(id);
+        return user.map(User::getTasks).orElse(null);
     }
 
-    public Task findById(Long id) {
-        return taskRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public Optional<Task> findById(Long id) {
+        return taskRepository.findById(id);
     }
 
     public void delete(Long id) {
@@ -64,8 +65,10 @@ public class TaskService {
     }
 
     public void complete(Long id) {
-        Task task = findById(id);
-        task.setTaskStatus(TaskStatus.COMPLETED);
-        update(task);
+        Optional<Task> task = findById(id);
+        if (task.isPresent()) {
+            task.get().setTaskStatus(TaskStatus.COMPLETED);
+            update(task.get());
+        }
     }
 }

@@ -5,9 +5,7 @@ import com.therealazimbek.spring.eventmasterapp.repositories.EventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserEventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,26 +33,22 @@ public class EventService {
         return eventRepository.findAll();
     }
 
-    public Event findById(UUID uuid) {
-        if (eventRepository.existsById(uuid) && eventRepository.findById(uuid).isPresent()) {
-            return eventRepository.findById(uuid).get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public Optional<Event> findById(UUID uuid) {
+        return eventRepository.findById(uuid);
     }
 
     public List<UserEvent> findEventUsers(UUID id) {
-        Event event = findById(id);
+        Event event = findById(id).get();
         return event.getEventUsers();
     }
 
     public List<Vendor> findAllEventVenues(UUID id) {
-        Event event = findById(id);
+        Event event = findById(id).get();
         return event.getVendors();
     }
 
     public Venue findEventVendor(UUID id) {
-        Event event = findById(id);
+        Event event = findById(id).get();
         return event.getVenue();
     }
 
@@ -62,13 +56,8 @@ public class EventService {
         eventRepository.save(event);
     }
 
-    public Event findByCode(String code) {
-        Optional<Event> e = findAll().stream().filter(event -> event.getCode().equals(code)).findFirst();
-        if (e.isPresent()) {
-            return e.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public Optional<Event> findByCode(String code) {
+        return findAll().stream().filter(event -> event.getCode().equals(code)).findFirst();
     }
 
     public void addGuest(Event event, User user, UserRole host) {
@@ -92,13 +81,13 @@ public class EventService {
 
     public List<Event> findAllActiveEventsExceptUser(String username) {
         return findAll().stream().filter(
-                event -> !event.getIsPrivate() && event.getUser() != userRepository.findByUsername(username)
+                event -> !event.getIsPrivate() && event.getUser() != userRepository.findByUsername(username).get()
                         && (LocalDateTime.now().isBefore(event.getEndDate()) ||
                         LocalDateTime.now().isEqual(event.getStartDate()))
         ).collect(Collectors.toList());
     }
 
-    public void delete(String id) {
-        eventRepository.deleteById(UUID.fromString(id));
+    public void delete(Event event) {
+        eventRepository.delete(event);
     }
 }

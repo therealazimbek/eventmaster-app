@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -24,17 +25,13 @@ public class VenueService {
         return venueRepository.findAll();
     }
 
-    public Venue findById(Long id) {
-        if (venueRepository.findById(id).isPresent()) {
-            return venueRepository.findById(id).get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public Optional<Venue> findById(Long id) {
+        return venueRepository.findById(id);
     }
 
     public List<Event> findAllVenueEvents(Long id) {
-        Venue venue = findById(id);
-        return venue.getEvents();
+        Optional<Venue> venue = findById(id);
+        return venue.map(Venue::getEvents).orElse(null);
     }
 
     public void save(Venue venue) {

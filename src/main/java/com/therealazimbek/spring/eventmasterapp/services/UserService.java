@@ -3,17 +3,14 @@ package com.therealazimbek.spring.eventmasterapp.services;
 import com.therealazimbek.spring.eventmasterapp.models.Event;
 import com.therealazimbek.spring.eventmasterapp.models.User;
 import com.therealazimbek.spring.eventmasterapp.models.UserEvent;
-import com.therealazimbek.spring.eventmasterapp.repositories.EventRepository;
 import com.therealazimbek.spring.eventmasterapp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,11 +18,8 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final EventRepository eventRepository;
-
     @Autowired
-    public UserService(UserRepository userRepository, EventRepository eventRepository) {
-        this.eventRepository = eventRepository;
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
@@ -33,24 +27,25 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User findById(Long id) {
-        if (userRepository.existsById(id) && userRepository.findById(id).isPresent()) {
-            return userRepository.findById(id).get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 
-    public User findByUsername(String username) {
-        if (userRepository.findByUsername(username) != null) {
-            return userRepository.findByUsername(username);
-        } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
+
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public List<Event> findAllUserEvents(Long id) {
-        User user = findById(id);
+        User user = findById(id).get();
         return user.getCreatedEvents();
     }
 
@@ -73,6 +68,7 @@ public class UserService {
         List<User> existingGuest = event.getEventUsers().stream().map(UserEvent::getUser).toList();
         List<User> availableUsers = findAll();
         availableUsers.removeAll(existingGuest);
+        availableUsers.remove(user);
         return availableUsers;
     }
 

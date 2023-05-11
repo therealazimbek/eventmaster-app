@@ -8,9 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Locale;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -29,7 +28,7 @@ public class VenuesController {
     }
 
     @GetMapping
-    public String venues(Model  model) {
+    public String venues(Model model) {
         model.addAttribute("venues", venueService.findAll());
         return "venues";
     }
@@ -51,11 +50,11 @@ public class VenuesController {
 
     @GetMapping("/{id}")
     public String findVenueById(@PathVariable Long id, Model model) {
-        try {
-            Venue venue = venueService.findById(id);
-            model.addAttribute("venue", venue);
+        Optional<Venue> venue = venueService.findById(id);
+        if (venue.isPresent()) {
+            model.addAttribute("venue", venue.get());
             return "venue";
-        } catch (ResponseStatusException e) {
+        } else {
             return "redirect:/notfound";
         }
     }

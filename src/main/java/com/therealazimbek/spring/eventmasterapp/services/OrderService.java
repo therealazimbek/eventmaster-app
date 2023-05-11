@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -27,8 +28,8 @@ public class OrderService {
     }
 
     public List<Order> findAllUserOrders(Long id) {
-        User user = userService.findById(id);
-        return user.getOrders();
+        Optional<User> user = userService.findById(id);
+        return user.map(User::getOrders).orElse(null);
     }
 
     public void save(Order order) {

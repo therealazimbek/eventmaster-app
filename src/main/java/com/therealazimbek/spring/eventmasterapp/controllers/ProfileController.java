@@ -1,6 +1,5 @@
 package com.therealazimbek.spring.eventmasterapp.controllers;
 
-import com.therealazimbek.spring.eventmasterapp.models.Event;
 import com.therealazimbek.spring.eventmasterapp.models.User;
 import com.therealazimbek.spring.eventmasterapp.models.UserPaymentCard;
 import com.therealazimbek.spring.eventmasterapp.services.UserPaymentCardService;
@@ -14,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/profile")
@@ -40,15 +41,21 @@ public class ProfileController {
 
     @GetMapping
     public String profile(Model model, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
-        model.addAttribute("user", user);
-        return "profile";
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (user.isPresent()) {
+            model.addAttribute("user", user.get());
+            return "profile";
+        }
+        return "redirect:/notfound";
     }
 
     @GetMapping("/addCard")
     public String addCard(Model model, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
-        model.addAttribute("user", user);
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (user.isEmpty()) {
+            return "redirect:/notfound";
+        }
+        model.addAttribute("user", user.get());
         return "cardForm";
     }
 
@@ -57,8 +64,11 @@ public class ProfileController {
         if (bindingResult.hasErrors()) {
             return "cardForm";
         }
-        User user = userService.findByUsername(authentication.getName());
-        userPaymentCard.setUser(user);
+        Optional<User> user = userService.findByUsername(authentication.getName());
+        if (user.isEmpty()) {
+            return "redirect:/notfound";
+        }
+        userPaymentCard.setUser(user.get());
         userPaymentCardService.save(userPaymentCard);
         return "redirect:/profile";
     }
